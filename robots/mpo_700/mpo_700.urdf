@@ -14,7 +14,7 @@
       <always_on>true</always_on>
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
-      <update_rate>100</update_rate>
+      <update_rate>40</update_rate>
       <ray>
         <scan>
           <horizontal>
@@ -55,7 +55,7 @@
     <sensor name="lidar_2_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
-      <update_rate>100</update_rate>
+      <update_rate>40</update_rate>
       <ray>
         <scan>
           <horizontal>
@@ -128,12 +128,12 @@
 
       <!-- Frame IDs -->
       <odometryFrame>odom</odometryFrame>
-      <robotBaseFrame>base_link</robotBaseFrame>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
 
       <!-- Set odom covariance -->
       <covariance_x>0.0001</covariance_x>
       <covariance_y>0.0001</covariance_y>
-      <covariance_yaw>0.01</covariance_yaw>
+      <covariance_yaw>0.0001</covariance_yaw>
 
     </plugin>  </gazebo>
   <!-- camera -->
@@ -217,7 +217,7 @@
 
   <link name="base_footprint" />
   <joint name="base_footprint_joint" type="fixed">
-    <origin rpy="0 0 3.14" xyz="0.24 0.18 0.22"/>
+    <origin rpy="0 0 3.14" xyz="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="6.5"/>
     <joint_properties damping="30" friction="110"/>
