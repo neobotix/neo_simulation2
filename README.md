@@ -15,11 +15,15 @@ Note that: We support only ROS-2 Foxy (Can be installed only in Ubuntu 20.04)
 
 `sudo apt-get install ros-foxy-gazebo-ros-pkgs`
 
+## Install the Navigation 2 package:
+
+`sudo apt install ros-foxy-navigation2 ros-foxy-nav2-bringup`
+
 ## Install the colcon build tool:
 
 ![Colcon_installation Steps](https://colcon.readthedocs.io/en/released/user/installation.html)
 
-## create a ros2 workspace as follows from your terminal: 
+## Create a ros2 workspace as follows from your terminal: 
 
 `mkdir ros2ws`
 
@@ -45,4 +49,8 @@ Feel free to use the teleop functionality!
 
 ## Navigation2 
 
-Coming Soon ! 
+`ros2 launch neo_simulation2 navigation.launch.py`
+
+Select the initial pose of the robot in the map using '2D-Pose Estimate' button for localization. 
+
+More information coming Soon ! 
