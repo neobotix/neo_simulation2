@@ -16,11 +16,7 @@
       <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
         <ros>
           <!-- Set namespace -->
-          <namespace></namespace>
-
-          <!-- Remap default topics -->
-          <argument>cmd_vel:=cmd_vel</argument>
-          <argument>odom:=odom</argument>
+          <!-- <namespace></namespace> -->
         </ros>
 
         <!-- Replace camelCase elements with camel_case ones -->
@@ -29,11 +25,20 @@
         <right_joint>wheel_right_joint</right_joint>
         <wheel_separation>0.592</wheel_separation>
         <wheel_diameter>0.260</wheel_diameter>
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+        <command_topic>cmd_vel</command_topic>
+
+        <odometry_topic>odom</odometry_topic>
         <odometry_frame>odom</odometry_frame>
+        <robot_base_frame>base_footprint</robot_base_frame>
 
         <!-- wheelTorque and wheelAcceleration now have max_ prefix -->
         <max_wheel_torque>200</max_wheel_torque>
         <max_acceleration>1.0</max_acceleration>
+
+        
 
       </plugin>
 </gazebo>

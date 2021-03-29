@@ -91,7 +91,7 @@
        
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
-      <robotNamespace>mpo_700</robotNamespace>
+      <robotNamespace>mpo_500</robotNamespace>
 
       <!-- Set control loop update rate -->
       <odometryRate>100</odometryRate>
