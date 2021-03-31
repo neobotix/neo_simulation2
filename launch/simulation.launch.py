@@ -9,25 +9,36 @@ from launch.substitutions import ThisLaunchFileDir, LaunchConfiguration
 from launch_ros.actions import Node
 import os
 from pathlib import Path
-os.chdir(os.path.join(str(Path.home()), "ros2ws", "src", "neo_simulation2"))
+
+MY_NEO_ROBOT = os.environ['MY_ROBOT']
 
 def generate_launch_description():
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    world = get_package_share_directory('neo_simulation2')
+    pkg_dir = get_package_share_directory('neo_simulation2')
 
-    default_world_path = os.path.join(world, 'worlds', 'neo_track1.world')
+    default_world_path = os.path.join(pkg_dir, 'worlds', 'neo_workshop.world')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+
+    robot_dir = LaunchConfiguration(
+        'robot_dir',
+        default=os.path.join(pkg_dir,
+            'robots/'+MY_NEO_ROBOT,
+            MY_NEO_ROBOT+'.urdf'))
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
         default_value='false',
         description='Use simulation (Gazebo) clock if true')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
-    urdf = os.path.join(get_package_share_directory(
-        'neo_simulation2'), 'robots', 'mpo_700/mpo_700.urdf')
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', 'mpo_700', '-file', 'robots/mpo_700/mpo_700.urdf'], output='screen')
+    urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots', MY_NEO_ROBOT+'/'+MY_NEO_ROBOT+'.urdf')
+    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', 'mpo_700', '-file', robot_dir], output='screen')
+
+    rviz_config_dir = os.path.join(
+        get_package_share_directory('nav2_bringup'),
+        'rviz',
+        'nav2_default_view.rviz')
 
     start_robot_state_publisher_cmd = Node(
         package='robot_state_publisher',
@@ -52,7 +63,13 @@ def generate_launch_description():
             }.items()
         )
 
-    rviz =  Node(package='rviz2',executable="rviz2",
-    output='screen',name='rviz2')
+    rviz =   Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config_dir],
+            parameters=[{'use_sim_time': use_sim_time}],
+            output='screen')
+
 
     return LaunchDescription([spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo, rviz])
