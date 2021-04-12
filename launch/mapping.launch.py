@@ -29,7 +29,7 @@ MY_NEO_ROBOT = os.environ['MY_ROBOT'] # Set the environment variable in bashrc
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true') 
-    param_file_name = MY_NEO_ROBOT + '_mapping.yaml'
+    param_file_name = 'mapping.yaml'
     param_dir = LaunchConfiguration(
         'parameters',
         default=os.path.join(
@@ -38,7 +38,6 @@ def generate_launch_description():
             param_file_name))
 
     slam_launch_file_dir = os.path.join(get_package_share_directory('slam_toolbox'), 'launch')
-
 
     return LaunchDescription([
         DeclareLaunchArgument(

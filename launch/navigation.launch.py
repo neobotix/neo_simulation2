@@ -35,7 +35,7 @@ def generate_launch_description():
             'maps',
             'neo_workshop.yaml'))
 
-    param_file_name = MY_NEO_ROBOT+'.yaml'
+    param_file_name = 'navigation.yaml'
     param_dir = LaunchConfiguration(
         'params_file',
         default=os.path.join(
