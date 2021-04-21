@@ -116,7 +116,7 @@
        
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
-      <robotNamespace>mpo_700</robotNamespace>
+      <robotNamespace> </robotNamespace>
 
       <!-- Set control loop update rate -->
       <odometryRate>100</odometryRate>
@@ -129,7 +129,7 @@
 
       <!-- Frame IDs -->
       <odometryFrame>odom</odometryFrame>
-      <robotBaseFrame>base_footprint</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
 
       <!-- Set odom covariance -->
       <covariance_x>0.0001</covariance_x>
@@ -216,16 +216,15 @@
     </sensor>
   </gazebo>
 
-  <link name="base_footprint" />
+  <link name="base_footprint"/>
   <joint name="base_footprint_joint" type="fixed">
-    <origin rpy="0 0 3.14" xyz="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="6.5"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <!-- <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="15"/> -->
+    <joint_properties damping="1" friction="1"/>
     <parent link="base_footprint"/>
     <child link="base_link"/>
   </joint>
-
   <link name="base_link">
     <inertial>
       <mass value="140"/>
@@ -246,10 +245,10 @@
     </collision>
   </link>
   <joint name="mpo_700_caster_front_left_joint" type="fixed">
-    <origin rpy="0 0 3.14" xyz="0.24 0.18 0.22"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="6.5"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="3.14 0 -1.57" xyz="0.24 0.18 0.27"/>
+    <axis xyz="0 0 -1"/>
+    <!-- <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="15"/> -->
+    <joint_properties damping="1" friction="1"/>
     <parent link="base_link"/>
     <child link="mpo_700_caster_front_left_link"/>
   </joint>
@@ -260,50 +259,22 @@
       <inertia ixx="0.27258101" ixy="0" ixz="0" iyy="0.27258101" iyz="0" izz="0.27258101"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0.0"/>
-      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="mpo_700_caster_front_right_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0.24 -0.18 0.22"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="6.5"/>
-    <joint_properties damping="30" friction="110"/>
-    <parent link="base_link"/>
-    <child link="mpo_700_caster_front_right_link"/>
-  </joint>
-  <link name="mpo_700_caster_front_right_link">
-    <inertial>
-      <mass value="12.7"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0.27258101" ixy="0" ixz="0" iyy="0.27258101" iyz="0" izz="0.27258101"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 3.14" xyz="0 0 0.0"/>
-      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin rpy="0 0 3.14" xyz="0 0 0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
   <joint name="mpo_700_caster_back_left_joint" type="fixed">
-    <origin rpy="0 0 3.14" xyz="-0.24 0.18 0.22"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="6.5"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="3.14 0 1.57" xyz="0.24 -0.18 0.27"/>
+    <axis xyz="0 0 -1"/>
+    <joint_properties damping="1" friction="1"/>
     <parent link="base_link"/>
     <child link="mpo_700_caster_back_left_link"/>
   </joint>
@@ -314,23 +285,22 @@
       <inertia ixx="0.27258101" ixy="0" ixz="0" iyy="0.27258101" iyz="0" izz="0.27258101"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
   <joint name="mpo_700_caster_back_right_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="-0.24 -0.18 0.22"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="6.5"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="3.14 0 -1.57" xyz="-0.24 0.18 0.27"/>
+    <axis xyz="0 0 -1"/>
+    <joint_properties damping="1" friction="1"/>
     <parent link="base_link"/>
     <child link="mpo_700_caster_back_right_link"/>
   </joint>
@@ -341,34 +311,59 @@
       <inertia ixx="0.27258101" ixy="0" ixz="0" iyy="0.27258101" iyz="0" izz="0.27258101"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 3.14" xyz="0 0 0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 3.14" xyz="0 0 0.0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
+      <geometry>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="mpo_700_caster_front_right_joint" type="fixed">
+    <origin rpy="3.14 0 1.57" xyz="-0.24 -0.18 0.27"/>
+    <axis xyz="0 0 -1"/>
+    <joint_properties damping="1" friction="1"/>
+    <parent link="base_link"/>
+    <child link="mpo_700_caster_front_right_link"/>
+  </joint>
+  <link name="mpo_700_caster_front_right_link">
+    <inertial>
+      <mass value="12.7"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.27258101" ixy="0" ixz="0" iyy="0.27258101" iyz="0" izz="0.27258101"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
+      <geometry>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.10"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
   <joint name="mpo_700_wheel_front_left_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0 0.045 -0.12"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="20.5"/>
-    <axis xyz="0 -1 0"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="0 0 0" xyz="-0.05 0. 0.18"/>
+    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="15"/>
+    <axis xyz="1 0 0"/>
     <parent link="mpo_700_caster_front_left_link"/>
     <child link="mpo_700_wheel_front_left_link"/>
   </joint>
   <link name="mpo_700_wheel_front_left_link" type="wheel">
     <inertial>
-      <mass value="1.2"/>
+      <mass value="2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0.11042056" ixy="0.0" ixz="0.0" iyy="0.11042056" iyz="0.0" izz="0.11042056"/>
+      <inertia ixx="0.00044332" ixy="0" ixz="0" iyy="0.00044332" iyz="0" izz="0.00072"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 3.14" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -376,55 +371,25 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <sphere radius="0.09"/>
-        <!-- <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/> -->
-      </geometry>
-    </collision>
-  </link>
-  <joint name="mpo_700_wheel_front_right_joint" type="fixed">
-    <origin rpy="0 0 3.14" xyz="0.0 -0.045 -0.12"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="20.5"/>
-    <axis xyz="0 -1 0"/>
-    <joint_properties damping="30" friction="110"/>
-    <parent link="mpo_700_caster_front_right_link"/>
-    <child link="mpo_700_wheel_front_right_link"/>
-  </joint>
-  <link name="mpo_700_wheel_front_right_link" type="wheel">
-    <inertial>
-      <mass value="1.2"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0.11042056" ixy="0.0" ixz="0.0" iyy="0.11042056" iyz="0.0" izz="0.11042056"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 3.14" xyz="0 0 0"/>
-      <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <sphere radius="0.09"/>
-        <!-- <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/> -->
       </geometry>
     </collision>
   </link>
   <joint name="mpo_700_wheel_back_left_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0 0.045 -0.12"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="20.5"/>
-    <axis xyz="0 -1 0"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="0 0 0" xyz="-0.05 0. 0.18"/>
+    <axis xyz="1 0 0"/>
+    <joint_properties damping="1" friction="1"/>
     <parent link="mpo_700_caster_back_left_link"/>
     <child link="mpo_700_wheel_back_left_link"/>
   </joint>
   <link name="mpo_700_wheel_back_left_link" type="wheel">
-    <inertial>
+     <inertial>
       <mass value="1.2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <inertia ixx="0.11042056" ixy="0.0" ixz="0.0" iyy="0.11042056" iyz="0.0" izz="0.11042056"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 3.14" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -432,27 +397,25 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <sphere radius="0.09"/>
-        <!-- <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/> -->
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
   <joint name="mpo_700_wheel_back_right_joint" type="fixed">
-    <origin rpy="0 0 3.14" xyz="0.0 -0.045 -0.12"/>
-    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="20.5"/>
-    <axis xyz="0 -1 0"/>
-    <joint_properties damping="30" friction="110"/>
+    <origin rpy="0 0 0" xyz="-0.05 0. 0.18"/>
+    <axis xyz="1 0 0"/>
+    <joint_properties damping="1" friction="1"/>
     <parent link="mpo_700_caster_back_right_link"/>
     <child link="mpo_700_wheel_back_right_link"/>
   </joint>
   <link name="mpo_700_wheel_back_right_link" type="wheel">
-    <inertial>
+     <inertial>
       <mass value="1.2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <inertia ixx="0.11042056" ixy="0.0" ixz="0.0" iyy="0.11042056" iyz="0.0" izz="0.11042056"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 3.14" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -460,11 +423,37 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <sphere radius="0.09"/>
-        <!-- <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/> -->
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
+  <joint name="mpo_700_wheel_front_right_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.05 0. 0.18"/>
+    <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="15"/>
+    <axis xyz="1 0 0"/>
+    <parent link="mpo_700_caster_front_right_link"/>
+    <child link="mpo_700_wheel_front_right_link"/>
+  </joint>
+  <link name="mpo_700_wheel_front_right_link" type="wheel">
+     <inertial>
+      <mass value="1.2"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.11042056" ixy="0.0" ixz="0.0" iyy="0.11042056" iyz="0.0" izz="0.11042056"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-WHEEL.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Sensors -->
   <joint name="lidar_1_joint" type="fixed">
     <axis xyz="0 1 0"/>
     <origin rpy="3.14 0 0.79" xyz="0.338 0.288 0.223"/>
@@ -472,21 +461,21 @@
     <child link="lidar_1_link"/>
   </joint>
   <link name="lidar_1_link" type="laser">
-    <inertial>
-      <mass value="0.0001"/>
+     <inertial>
+      <mass value="1.2"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+      <inertia ixx="0.11042056" ixy="0.0" ixz="0.0" iyy="0.11042056" iyz="0.0" izz="0.11042056"/>
     </inertial>
     <visual>
-      <origin rpy="1.57 0 0" xyz="0 0 -0.06"/>
+      <origin rpy="-1.57 0 3.14" xyz="0 0 -0.12"/>
       <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-MICROSCAN3.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-S300.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.57 0 0" xyz="0 0 -0.06"/>
+      <origin rpy="-1.57 0 3.14" xyz="0 0 -0.12"/>
       <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-MICROSCAN3.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-S300.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
@@ -498,48 +487,55 @@
   </joint>
   <link name="lidar_2_link" type="laser">
     <inertial>
-      <mass value="0.0001"/>
+      <mass value="0.001"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
     </inertial>
     <visual>
-      <origin rpy="1.57 0 0" xyz="0 0 -0.06"/>
+      <origin rpy="-1.57 0 3.14" xyz="0 0 -0.12"/>
       <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-MICROSCAN3.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-S300.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision>
-      <origin rpy="1.57 0 0" xyz="0 0 -0.06"/>
+      <origin rpy="-1.57 0 3.14" xyz="0 0 -0.12"/>
       <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-MICROSCAN3.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/SICK-S300.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
   </link>
-  <joint name="docking_adapter_joint" type="fixed">
-    <axis xyz="0 1 0"/>
-    <origin rpy="0 0 -1.57" xyz="-0.300 0 0.320"/>
-    <parent link="base_link"/>
-    <child link="docking_adapter_link"/>
-  </joint>
-  <link name="docking_adapter_link" type="laser">
-    <inertial>
-      <mass value="0.0001"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0.0"/>
-      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-charge-port.dae" scale="0.1 0.1 0.1"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0.0"/>
-      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mpo_700/meshes/MPO-700-charge-port.dae" scale="0.1 0.1 0.1"/>
-      </geometry>
-    </collision>
-  </link>
+
+    <gazebo reference="mpo_700_wheel_front_right_link">
+    <!-- <kp> 10000 </kp> -->
+    <!-- <fdir1>0 1 0</fdir1> -->
+    <!-- <slip1> 0.1 </slip1> -->
+    <mu1>0.0001</mu1>
+    <mu2>0.0001</mu2>
+  </gazebo>
+
+     <gazebo reference="mpo_700_wheel_back_right_link">
+    <!-- <kp> 10000 </kp> -->
+    <!-- <fdir1>0 1 0</fdir1> -->
+    <!-- <slip1> 0.1 </slip1> -->
+    <mu1>0.0001</mu1>
+    <mu2>0.0001</mu2>
+  </gazebo>
+
+     <gazebo reference="mpo_700_wheel_front_left_link">
+    <!-- <kp> 10000 </kp> -->
+    <!-- <fdir1>0 1 0</fdir1> -->
+    <!-- <slip1> 0.1 </slip1> -->
+    <mu1>0.0001</mu1>
+    <mu2>0.0001</mu2>
+  </gazebo>
+
+     <gazebo reference="mpo_700_wheel_back_left_link">
+    <!-- <kp> 10000 </kp> -->
+    <!-- <fdir1>0 1 0</fdir1> -->
+    <!-- <slip1> 0.1 </slip1> -->
+    <mu1>0.0001</mu1>
+    <mu2>0.0001</mu2>
+  </gazebo>
   <!--+++++++++++++++++++ IMU ++++++++++++++++++++++++-->
   <!-- Comment or uncomment based on your requirement -->
   <!-->
