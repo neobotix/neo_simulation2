@@ -155,17 +155,18 @@ local_costmap:
       publish_frequency: 1.0
       global_frame: odom
       robot_base_frame: base_footprint
+      footprint_padding: 0.15
+      footprint:  “[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.30],[0.30,-0.30] ]”
       use_sim_time: True
       rolling_window: true
-      width: 3
-      height: 3
-      resolution: 0.05
-      robot_radius: 0.22
+      width: 5
+      height: 5
+      resolution: 0.02
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        cost_scaling_factor: 5.0
+        inflation_radius: 0.8
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -182,8 +183,6 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
-      static_layer:
-        map_subscribe_transient_local: True
       always_send_full_costmap: True
   local_costmap_client:
     ros__parameters:
@@ -195,12 +194,13 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 0.25
+      update_frequency: 1.0
       publish_frequency: 0.4
       global_frame: map
       robot_base_frame: base_footprint
+      footprint_padding: 0.15
+      footprint:  “[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.30],[0.30,-0.30] ]”
       use_sim_time: True
-      robot_radius: 0.22
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
