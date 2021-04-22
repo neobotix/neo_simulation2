@@ -16,16 +16,7 @@
 
 
       <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
-        <ros>
-          <!-- Set namespace -->
-          <!-- <namespace> </namespace> -->
-
-          <!-- Remap default topics -->
-          <!-- <argument>cmd_vel:=cmd_vel</argument>
-          <argument>odom:=odom</argument> -->
-        </ros>
-        <!-- <update_rate>100</update_rate> -->
-        <!-- Replace camelCase elements with camel_case ones -->
+        <ros>        </ros>
         <update_rate>100</update_rate>
         <left_joint>mp_400_fixed_wheel_left_joint</left_joint>
         <right_joint>mp_400_fixed_wheel_right_joint</right_joint>
@@ -348,9 +339,9 @@
     <axis xyz="0 1 0"/>
     <origin rpy="0 3.14 3.14" xyz="0.230 0 0.110"/>
     <parent link="base_link"/>
-    <child link="laser_1_link"/>
+    <child link="lidar_1_link"/>
   </joint>
-  <link name="laser_1_link" type="laser">
+  <link name="lidar_1_link" type="laser">
     <inertial>
       <mass value="0.001"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -445,4 +436,5 @@
     <origin xyz="0 0 0.38" rpy="0 0 0" />
   </xacro:camera> -->
 </robot>
+
 
