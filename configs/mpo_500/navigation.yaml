@@ -40,7 +40,6 @@ amcl:
     # z_rand: 0.5
     # z_short: 0.05
 
-
 amcl_map_client:
   ros__parameters:
     use_sim_time: True
@@ -88,130 +87,138 @@ controller_server:
   ros__parameters:
     odom_topic: /odom
     use_sim_time: True
-    controller_frequency: 5.0
-    controller_plugin_types: ["teb_local_planner::TebLocalPlannerROS"]
+    controller_frequency: 100.0
     controller_plugins: ["FollowPath"]
+    # controller server parameters (see Controller Server for more info)
+    controller_plugin_types: ["neo_local_planner::NeoLocalPlanner"]
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.5
+      movement_time_allowance: 10.0
+    goal_checker:
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.01
+      yaw_goal_tolerance: 0.005
+      stateful: True
     FollowPath:
-      plugin: teb_local_planner::TebLocalPlannerROS
+      plugin: "neo_local_planner::NeoLocalPlanner"
+          # The x acceleration limit of the robot in meters/sec^2
+      acc_lim_x : 0.25
 
-      teb_autosize: 1.0
-      dt_ref: 0.3
-      dt_hysteresis: 0.1
-      max_samples: 500
-      global_plan_overwrite_orientation: False
-      allow_init_with_backwards_motion: False
-      max_global_plan_lookahead_dist: 3.0
-      global_plan_viapoint_sep: 0.3
-      global_plan_prune_distance: 1.0
-      exact_arc_length: False
-      feasibility_check_no_poses: 2
-      publish_feedback: False
-          
-      # Robot
-              
-      max_vel_x: 0.26
-      max_vel_theta: 1.0 
-      acc_lim_x: 2.5
-      acc_lim_theta: 3.2
+      # The y acceleration limit of the robot in meters/sec^2
+      acc_lim_y : 0.25
 
-      footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
-        type: "circular"
-        radius: 0.60 # for type "circular"
+      # The rotational acceleration limit of the robot in radians/sec^2
+      acc_lim_theta : 0.8
 
-      # GoalTolerance
-              
-      free_goal_vel: False
-          
-      # Obstacles
-          
-      min_obstacle_dist: 0.27
-      inflation_dist: 0.6
-      include_costmap_obstacles: True
-      costmap_obstacles_behind_robot_dist: 1.0
-      obstacle_poses_affected: 15
+      # The maximum x velocity for the robot in m/s.
+      max_vel_x : 0.8
 
-      dynamic_obstacle_inflation_dist: 0.6
-      include_dynamic_obstacles: True 
+      # The minimum x velocity for the robot in m/s, negative for backwards motion.
+      min_vel_x : -0.2
 
-      costmap_converter_plugin: "costmap_converter::CostmapToPolygonsDBSMCCH"
-      costmap_converter_spin_thread: True
-      costmap_converter_rate: 5
+      # The maximum y velocity for the robot in m/s
+      max_vel_y : 0.5
 
-      # Optimization
-          
-      no_inner_iterations: 5
-      no_outer_iterations: 4
-      optimization_activate: True
-      optimization_verbose: False
-      penalty_epsilon: 0.1
-      obstacle_cost_exponent: 4.0
-      weight_max_vel_x: 0.5
-      weight_max_vel_theta: 0.5
-      weight_acc_lim_x: 0.5
-      weight_acc_lim_theta: 10.5
-      weight_kinematics_nh: 1000.0
-      weight_kinematics_forward_drive: 3.0
-      weight_kinematics_turning_radius: 1.0
-      weight_optimaltime: 1.0 # must be > 0
-      weight_shortest_path: 0.0
-      weight_obstacle: 100.0
-      weight_inflation: 0.2
-      weight_dynamic_obstacle: 10.0 # not in use yet
-      weight_dynamic_obstacle_inflation: 0.2
-      weight_viapoint: 50.0
-      weight_adapt_factor: 2.0
+      # The minimum y velocity for the robot in m/s
+      min_vel_y : -0.5
 
-      # Homotopy Class Planner
+      # The absolute value of the maximum rotational velocity for the robot in rad/s
+      max_rot_vel : 0.8
 
-      enable_homotopy_class_planning: True
-      enable_multithreading: True
-      max_number_classes: 4
-      selection_cost_hysteresis: 5.0
-      selection_prefer_initial_plan: 1.0
-      selection_obst_cost_scale: 1.0
-      selection_alternative_time_cost: True
+      # The absolute value of the minimum rotational velocity for the robot in rad/s
+      min_rot_vel : 0.1
 
-      roadmap_graph_no_samples: 15
-      roadmap_graph_area_width: 5.0
-      roadmap_graph_area_length_scale: 1.0
-      h_signature_prescaler: 0.5
-      h_signature_threshold: 0.1
-      obstacle_heading_threshold: 0.45
-      switching_blocking_period: 0.0
-      viapoints_all_candidates: True
-      delete_detours_backwards: True
-      max_ratio_detours_duration_best_duration: 3.0
-      visualize_hc_graph: False
-      visualize_with_time_as_z_axis_scale: 0.0
+      # The absolute value of the maximum translational velocity for the robot in m/s
+      max_trans_vel : 0.8
 
-      # Recovery
-      
-      shrink_horizon_backup: True
-      shrink_horizon_min_duration: 10.0
-      oscillation_recovery: True
-      oscillation_v_eps: 0.1
-      oscillation_omega_eps: 0.1
-      oscillation_recovery_min_duration: 10.0
-      oscillation_filter_duration: 10.0
+      # The absolute value of the minimum translational velocity for the robot in m/s
+      min_trans_vel : 0.1
+
+      # The tolerance in radians for the controller in yaw/rotation when achieving its goal
+      yaw_goal_tolerance : 0.005
+
+      # The tolerance in meters for the controller in the x & y distance when achieving a goal
+      xy_goal_tolerance : 0.01
+
+      # How long to fine tune for goal position after reaching tolerance limits [s]
+      goal_tune_time : 0.5
+
+      # How far to predict control pose into the future based on latest odometry [s]
+      lookahead_time : 0.4
+
+      # How far to look ahead when computing path orientation [m]
+      lookahead_dist : 0.5
+
+      # Threshold yaw error below which we consider to start moving [rad]
+      start_yaw_error : 0.5
+
+      # Gain when adjusting final x position for goal [1/s]
+      pos_x_gain : 1.0
+
+       # Gain when adjusting y position (holonomic only) [1/s]
+      pos_y_gain : 1.0
+
+      # Gain for adjusting yaw when not translating, or in case of holonomic drive  [1/s]
+      static_yaw_gain : 3.0
+
+      # Gain for x cost avoidance (holonomic only)
+      cost_x_gain : 0.1
+
+      # Gain for y cost avoidance (holonomic only)
+      cost_y_gain : 0.1
+
+      # How far ahead to compute y cost gradient (constant offset) [m]
+      cost_y_lookahead_dist : 0.0
+
+      # How far ahead to compute y cost gradient (dynamic offset) [s]
+      cost_y_lookahead_time : 0.3
+
+      # Gain for yaw cost avoidance
+      cost_yaw_gain : 2.0
+
+      # Gain for final control low pass filter
+      low_pass_gain : 0.2
+
+      # Max cost to allow, above we slow down to min_trans_vel or even stop
+      max_cost : 0.95
+
+      # Max velocity based on curvature [rad/s]
+      max_curve_vel : 0.4
+
+      # Max distance to goal when looking for it [m]
+      max_goal_dist : 0.5
+
+      # Max distance allowable for backing up (zero = unlimited) [m]
+      max_backup_dist : 0.0
+
+      # Minimal distance for stopping [m]
+      min_stop_dist : 0.2
+
+      # If robot has differential drive, holonomic otherwise
+      differential_drive : false
+
+      constrain_final: true
 
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 10.0
+      publish_frequency: 1.0
       global_frame: odom
       robot_base_frame: base_footprint
+      footprint_padding: 0.25
+      footprint:  “[ [0.5,0.4],[-0.5,0.4],[-0.5,-0.4],[0.5,-0.4] ]”
       use_sim_time: True
       rolling_window: true
       width: 3
       height: 3
       resolution: 0.05
-      robot_radius: 0.22
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        cost_scaling_factor: 5.0
+        inflation_radius: 1.0
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -221,9 +228,15 @@ local_costmap:
         z_voxels: 16
         max_obstacle_height: 2.0
         mark_threshold: 0
-        observation_sources: scan
+        observation_sources: scan scan1
         scan:
           topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+        scan1:
+          topic: /scan2
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -241,10 +254,12 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: base_footprint
+      footprint_padding: 0.25
+      footprint:  “[ [0.5,0.4],[-0.5,0.4],[-0.5,-0.4],[0.5,-0.4] ]”
       use_sim_time: True
       robot_radius: 0.22
       resolution: 0.05
@@ -253,9 +268,15 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan
+        observation_sources: scan scan1
         scan:
           topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+        scan1:
+          topic: /scan2
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -265,8 +286,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        cost_scaling_factor: 5.0
+        inflation_radius: 1.0
       always_send_full_costmap: True
   global_costmap_client:
     ros__parameters:
@@ -327,3 +348,4 @@ recoveries_server:
 robot_state_publisher:
   ros__parameters:
     use_sim_time: True
+
