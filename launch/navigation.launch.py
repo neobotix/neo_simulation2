@@ -25,6 +25,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 MY_NEO_ROBOT = os.environ['MY_ROBOT']
+MY_NEO_ENVIRONMENT = os.environ['MAP_NAME']
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
@@ -33,7 +34,7 @@ def generate_launch_description():
         default=os.path.join(
             get_package_share_directory('neo_simulation2'),
             'maps',
-            'neo_workshop.yaml'))
+            MY_NEO_ENVIRONMENT+'.yaml'))
 
     param_file_name = 'navigation.yaml'
     param_dir = LaunchConfiguration(

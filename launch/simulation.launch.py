@@ -11,13 +11,14 @@ import os
 from pathlib import Path
 
 MY_NEO_ROBOT = os.environ['MY_ROBOT']
+MY_NEO_ENVIRONMENT = os.environ['MAP_NAME']
 
 def generate_launch_description():
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     pkg_dir = get_package_share_directory('neo_simulation2')
 
-    default_world_path = os.path.join(pkg_dir, 'worlds', 'neo_workshop.world')
+    default_world_path = os.path.join(pkg_dir, 'worlds', MY_NEO_ENVIRONMENT + '.world')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
