@@ -14,17 +14,13 @@ MY_NEO_ROBOT = os.environ['MY_ROBOT']
 MY_NEO_ENVIRONMENT = os.environ['MAP_NAME']
 
 def generate_launch_description():
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-
-    pkg_dir = get_package_share_directory('neo_simulation2')
-
-    default_world_path = os.path.join(pkg_dir, 'worlds', MY_NEO_ENVIRONMENT + '.world')
+    default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', MY_NEO_ENVIRONMENT + '.world')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
     robot_dir = LaunchConfiguration(
         'robot_dir',
-        default=os.path.join(pkg_dir,
+        default=os.path.join(get_package_share_directory('neo_simulation2'),
             'robots/'+MY_NEO_ROBOT,
             MY_NEO_ROBOT+'.urdf'))
 
@@ -33,8 +29,9 @@ def generate_launch_description():
         default_value='false',
         description='Use simulation (Gazebo) clock if true')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
-    urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots', MY_NEO_ROBOT+'/'+MY_NEO_ROBOT+'.urdf')
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', 'mpo_700', '-file', robot_dir], output='screen')
+    urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots/'+MY_NEO_ROBOT+'/', MY_NEO_ROBOT+'.urdf')
+
+    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', MY_NEO_ROBOT, '-file', urdf], output='screen')
 
     rviz_config_dir = os.path.join(
         get_package_share_directory('nav2_bringup'),
@@ -56,7 +53,7 @@ def generate_launch_description():
 
     gazebo = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')
+                os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
             ),
             launch_arguments={
                 'world': default_world_path,
