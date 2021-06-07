@@ -1,12 +1,12 @@
 amcl:
   ros__parameters:
     use_sim_time: True
-    alpha1: 0.1
-    # alpha2: 1.0
-    alpha3: 0.1
-    # alpha4: 1.0
-    # alpha5: 1.0
-    base_frame_id: "base_footprint"
+    alpha1: 0.001
+    alpha2: 0.001
+    alpha3: 0.001
+    alpha4: 0.001
+    alpha5: 0.001
+    base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -15,8 +15,8 @@ amcl:
     lambda_short: 0.1
     set_initial_pose: true
     laser_likelihood_max_dist: 2.0
-    laser_max_range: -1.0
-    laser_min_range: -1.0
+    laser_max_range: -1.44
+    laser_min_range: 1.44
     laser_model_type: "likelihood_field"
     max_beams: 200
     max_particles: 2000
@@ -32,7 +32,7 @@ amcl:
     sigma_hit: 0.2
     tf_broadcast: true
     transform_tolerance: 0.1
-    scan_topic: scan
+    scan_topic: /scan
     update_min_a: 0.1
     update_min_d: 0.1
     # z_hit: 0.5
@@ -40,19 +40,11 @@ amcl:
     # z_rand: 0.5
     # z_short: 0.05
 
-amcl_map_client:
-  ros__parameters:
-    use_sim_time: True
-
-amcl_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
-
 bt_navigator:
   ros__parameters:
     use_sim_time: True
     global_frame: map
-    robot_base_frame: base_footprint
+    robot_base_frame: base_link
     odom_topic: /odom
     default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
     plugin_lib_names:
@@ -79,25 +71,17 @@ bt_navigator:
     - nav2_time_expired_condition_bt_node
     - nav2_distance_traveled_condition_bt_node
 
-bt_navigator_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
 
 controller_server:
   ros__parameters:
     # controller server parameters (see Controller Server for more info)
     use_sim_time: True
-    controller_frequency: 5.0
+    controller_frequency: 50.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
-    progress_checker_plugin: "progress_checker"
     goal_checker_plugin: "goal_checker"
     controller_plugins: ["FollowPath"]
-    progress_checker:
-      plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.5
-      movement_time_allowance: 10.0
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.25
@@ -105,48 +89,96 @@ controller_server:
       stateful: True
     # DWB controller parameters
     FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
-      debug_trajectory_details: True
-      min_vel_x: 0.0
-      min_vel_y: 0.0
-      max_vel_x: 0.8
-      max_vel_y: 0.8
-      max_vel_theta: 0.8
-      min_speed_xy: 0.1
-      max_speed_xy: 0.8
-      min_speed_theta: 0.0
-      acc_lim_x: 0.25
-      acc_lim_y: 0.25
-      acc_lim_theta: 3.2
-      decel_lim_x: -0.25
-      decel_lim_y: -0.25
-      decel_lim_theta: -3.2
-      vx_samples: 20
-      vy_samples: 5
-      vtheta_samples: 20
-      sim_time: 1.7
-      linear_granularity: 0.05
-      angular_granularity: 0.025
-      transform_tolerance: 0.2
-      xy_goal_tolerance: 0.25
-      trans_stopped_velocity: 0.25
-      short_circuit_trajectory_evaluation: True
-      stateful: True
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.02
-      PathAlign.scale: 32.0
-      GoalAlign.scale: 24.0
-      PathAlign.forward_point_distance: 0.1
-      GoalAlign.forward_point_distance: 0.1
-      PathDist.scale: 32.0
-      GoalDist.scale: 24.0
-      RotateToGoal.scale: 32.0
-      RotateToGoal.slowing_factor: 5.0
-      RotateToGoal.lookahead_time: -1.0
+      plugin: "neo_local_planner::NeoLocalPlanner"
+      # The x acceleration limit of the robot in meters/sec^2
+       # The x acceleration limit of the robot in meters/sec^2
+      acc_lim_x : 0.25
 
-controller_server_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
+      # The rotational acceleration limit of the robot in radians/sec^2
+      acc_lim_theta : 0.8
+
+      # The maximum x velocity for the robot in m/s.
+      max_vel_x : 0.8
+
+      # The minimum x velocity for the robot in m/s, negative for backwards motion.
+      min_vel_x : -0.1
+
+      # The absolute value of the maximum rotational velocity for the robot in rad/s
+      max_rot_vel : 0.8
+
+      # The absolute value of the minimum rotational velocity for the robot in rad/s
+      min_rot_vel : 0.1
+
+      # The absolute value of the maximum translational velocity for the robot in m/s
+      max_trans_vel : 0.8
+
+      # The absolute value of the minimum translational velocity for the robot in m/s
+      min_trans_vel : 0.1
+
+      # The tolerance in radians for the controller in yaw/rotation when achieving its goal
+      yaw_goal_tolerance : 0.01
+
+      # The tolerance in meters for the controller in the x & y distance when achieving a goal
+      xy_goal_tolerance : 0.1
+
+      # How long to fine tune for goal position after reaching tolerance limits [s]
+      goal_tune_time : 3.0
+
+      # How far to predict control pose into the future based on latest odometry [s]
+      lookahead_time : 0.3
+
+      # How far to look ahead when computing path orientation [m]
+      lookahead_dist : 0.5
+
+      # Threshold yaw error below which we consider to start moving [rad]
+      start_yaw_error : 0.2
+
+      # Gain when adjusting final x position for goal [1/s]
+      pos_x_gain : 1.0
+
+      # Gain for lane keeping based on y error (differential only) [rad/s^2]
+      pos_y_yaw_gain : 1.0
+
+      # Gain for lane keeping based on yaw error (differential only) [1/s]
+      yaw_gain : 2.0
+
+      # Gain for adjusting yaw when not translating, or in case of holonomic drive  [1/s]
+      static_yaw_gain : 3.0
+
+      # Gain for y cost avoidance (differential only)
+      cost_y_yaw_gain : 0.3
+
+      # How far ahead to compute y cost gradient (constant offset) [m]
+      cost_y_lookahead_dist : 0.3
+
+      # How far ahead to compute y cost gradient (dynamic offset) [s]
+      cost_y_lookahead_time : 1.5
+
+      # Gain for yaw cost avoidance
+      cost_yaw_gain : 2.0
+
+      # Gain for final control low pass filter
+      low_pass_gain : 0.2
+
+      # Max cost to allow, above we slow down to min_trans_vel or even stop
+      max_cost : 0.95
+
+      # Max velocity based on curvature [rad/s]
+      max_curve_vel : 0.3
+
+      # Max distance to goal when looking for it [m]
+      max_goal_dist : 0.3
+
+      # Max distance allowable for backing up (zero = unlimited) [m]
+      max_backup_dist : 0.1
+
+      # Minimal distance for stopping [m]
+      min_stop_dist : 0.3
+
+      # If robot has differential drive, holonomic otherwise
+      differential_drive : true
+
+
 
 local_costmap:
   local_costmap:
@@ -154,15 +186,16 @@ local_costmap:
       update_frequency: 10.0
       publish_frequency: 1.0
       global_frame: odom
-      robot_base_frame: base_footprint
-      footprint_padding: 0.15
-      footprint:  “[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.30],[0.30,-0.30] ]”
+      robot_base_frame: base_link
+      footprint_padding: 0.
+      footprint:  "[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.3],[0.30,-0.3] ]"
       use_sim_time: True
       rolling_window: true
       width: 5
       height: 5
       resolution: 0.02
-      plugins: ["voxel_layer", "inflation_layer"]
+      # robot_radius: 0.22
+      plugins: ["voxel_layer", "inflation_layer", "obstacle_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0
@@ -172,17 +205,47 @@ local_costmap:
         enabled: True
         publish_voxel_map: True
         origin_z: 0.0
-        z_resolution: 0.05
-        z_voxels: 16
+        z_resolution: 0.02
+        z_voxels: 10
         max_obstacle_height: 2.0
         mark_threshold: 0
-        observation_sources: scan
+        observation_sources: scan scan1
         scan:
           topic: /scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"
+        scan1:
+          topic: /lidar_2/scan_filtered
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan scan1
+        scan:
+          topic: /scan
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
+          raytrace_max_range: 8.0
+          raytrace_min_range: 0.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+        scan1:
+          topic: /lidar_2/scan_filtered
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
+          raytrace_max_range: 8.0
+          raytrace_min_range: 0.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+      static_layer:
+        map_subscribe_transient_local: False
       always_send_full_costmap: True
   local_costmap_client:
     ros__parameters:
@@ -194,34 +257,64 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
-      publish_frequency: 0.4
+      update_frequency: 0.4
+      publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: base_footprint
-      footprint_padding: 0.15
-      footprint:  “[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.30],[0.30,-0.30] ]”
+      robot_base_frame: base_link
+      footprint_padding: 0.0
+      footprint:  "[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.3],[0.30,-0.3] ]"
       use_sim_time: True
+      # robot_radius: 0.22
       resolution: 0.05
-      track_unknown_space: true
-      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      plugins: ["static_layer", "obstacle_layer","voxel_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan
+        observation_sources: scan scan1
         scan:
           topic: /scan
-          max_obstacle_height: 2.0
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
+          raytrace_max_range: 8.0
+          raytrace_min_range: 0.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+        scan1:
+          topic: /lidar_2/scan_filtered
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
+          raytrace_max_range: 8.0
+          raytrace_min_range: 0.0
           clearing: True
           marking: True
           data_type: "LaserScan"
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
+        enabled: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 10.0
-        inflation_radius: 2.3
+        cost_scaling_factor: 4.5
+        inflation_radius: 0.8
       always_send_full_costmap: True
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: True
+        publish_voxel_map: True
+        observation_sources: scan scan1
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: False
+          data_type: "LaserScan"
+        scan1:
+          topic: /lidar_2/scan_filtered
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: False
+          data_type: "LaserScan"
   global_costmap_client:
     ros__parameters:
       use_sim_time: True
@@ -232,7 +325,7 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: True
-    yaml_filename: "neo_track1.yaml"
+    yaml_filename: "test.yaml"
 
 map_saver:
   ros__parameters:
@@ -270,9 +363,9 @@ recoveries_server:
     wait:
       plugin: "nav2_recoveries/Wait"
     global_frame: odom
-    robot_base_frame: base_footprint
+    robot_base_frame: base_link
     transform_timeout: 0.1
-    use_sim_time: true
+    use_sim_time: True
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
     min_rotational_vel: 0.4

@@ -32,8 +32,8 @@
         <robot_base_frame>base_footprint</robot_base_frame>
 
         <!-- wheelTorque and wheelAcceleration now have max_ prefix -->
-        <max_wheel_torque>200</max_wheel_torque>
-        <max_acceleration>1.0</max_acceleration>
+        <max_wheel_torque>1000</max_wheel_torque>
+        <max_acceleration>20.0</max_acceleration>
 
       </plugin>
 </gazebo>
