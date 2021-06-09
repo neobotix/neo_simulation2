@@ -76,7 +76,7 @@ controller_server:
   ros__parameters:
     # controller server parameters (see Controller Server for more info)
     use_sim_time: True
-    controller_frequency: 50.0
+    controller_frequency: 100.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
@@ -84,8 +84,8 @@ controller_server:
     controller_plugins: ["FollowPath"]
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.25
+      xy_goal_tolerance: 0.01
+      yaw_goal_tolerance: 0.05
       stateful: True
     # DWB controller parameters
     FollowPath:
@@ -97,7 +97,7 @@ controller_server:
       acc_lim_y : 0.25
 
       # The rotational acceleration limit of the robot in radians/sec^2
-      acc_lim_theta : 0.8
+      acc_lim_theta : 1.0
 
       # The maximum x velocity for the robot in m/s.
       max_vel_x : 0.6
@@ -105,10 +105,10 @@ controller_server:
       # The minimum x velocity for the robot in m/s, negative for backwards motion.
       min_vel_x : -0.2
 
-      # The maximum x velocity for the robot in m/s.
+      # The maximum y velocity for the robot in m/s
       max_vel_y : 0.5
 
-      # The minimum x velocity for the robot in m/s, negative for backwards motion.
+      # The minimum y velocity for the robot in m/s
       min_vel_y : -0.5
 
       # The absolute value of the maximum rotational velocity for the robot in rad/s
@@ -130,7 +130,7 @@ controller_server:
       xy_goal_tolerance : 0.01
 
       # How long to fine tune for goal position after reaching tolerance limits [s]
-      goal_tune_time : 3.0
+      goal_tune_time : 2.0
 
       # How far to predict control pose into the future based on latest odometry [s]
       lookahead_time : 0.4
@@ -144,11 +144,8 @@ controller_server:
       # Gain when adjusting final x position for goal [1/s]
       pos_x_gain : 1.0
 
-      # Gain for lane keeping based on y error (differential only) [rad/s^2]
-      pos_y_yaw_gain : 1.0
-
-      # Gain for lane keeping based on yaw error (differential only) [1/s]
-      yaw_gain : 3.0
+       # Gain when adjusting y position (holonomic only) [1/s]
+      pos_y_gain : 1.0
 
       # Gain for adjusting yaw when not translating, or in case of holonomic drive  [1/s]
       static_yaw_gain : 3.0
@@ -158,9 +155,6 @@ controller_server:
 
       # Gain for y cost avoidance (holonomic only)
       cost_y_gain : 0.2
-
-      # Gain for y cost avoidance (differential only)
-      cost_y_yaw_gain : 0.3
 
       # How far ahead to compute y cost gradient (constant offset) [m]
       cost_y_lookahead_dist : 0.0
@@ -194,6 +188,7 @@ controller_server:
 
 
 
+
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -205,9 +200,9 @@ local_costmap:
       footprint:  "[ [0.50,0.4],[-0.50,0.4],[-0.50,-0.4],[0.50,-0.4] ]"
       use_sim_time: True
       rolling_window: true
-      width: 3
-      height: 3
-      resolution: 0.05
+      width: 5
+      height: 5
+      resolution: 0.02
       plugins: ["voxel_layer", "inflation_layer", "obstacle_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
