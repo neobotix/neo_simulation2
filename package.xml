@@ -16,5 +16,7 @@
   <build_depend>nav2_bringup</build_depend>
   <export>
     <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_model_path="${prefix}/.." />
+    <gazebo_ros gazebo_model_path="${prefix}/models" />
   </export>
 </package>
