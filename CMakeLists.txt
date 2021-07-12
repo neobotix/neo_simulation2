@@ -10,6 +10,7 @@ install(DIRECTORY launch
   maps
   worlds
   robots
+  components
   models
   DESTINATION share/${PROJECT_NAME})
 
