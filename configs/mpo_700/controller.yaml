@@ -1,0 +1,84 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    mpo_700_wheel_front_left_controller:
+      type: velocity_controllers/JointVelocityController
+
+    mpo_700_wheel_front_right_controller:
+      type: velocity_controllers/JointVelocityController
+
+    mpo_700_wheel_back_left_controller:
+      type: velocity_controllers/JointVelocityController
+
+    mpo_700_wheel_back_left_controller:
+      type: velocity_controllers/JointVelocityController
+
+    position_controller:
+      type: position_controller/JointPositionController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+mpo_700_wheel_front_left_controller:
+  ros__parameters:
+    joints:
+      - mpo_700_wheel_front_left_joint
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+mpo_700_wheel_front_right_controller:
+  ros__parameters:
+    joints:
+      - mpo_700_wheel_front_right_joint
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+mpo_700_wheel_front_left_controller:
+  ros__parameters:
+    joints:
+      - mpo_700_wheel_front_left_joint
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+mpo_700_wheel_back_right_controller:
+  ros__parameters:
+    joints:
+      - mpo_700_wheel_back_right_joint
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+mpo_700_wheel_back_left_controller:
+  ros__parameters:
+    joints:
+      - mpo_700_wheel_back_left_joint
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+position_controller:
+  ros__parameters:
+    joints:
+      - mpo_700_caster_front_right_joint
+      - mpo_700_caster_front_left_joint
+      - mpo_700_caster_back_left_joint
+      - mpo_700_caster_back_right_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
