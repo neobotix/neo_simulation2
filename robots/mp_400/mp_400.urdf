@@ -16,7 +16,7 @@
 
 
       <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
-        <ros>        </ros>
+        <ros>    <remapping>/tf:=tf</remapping>    </ros>
         <update_rate>100</update_rate>
         <left_joint>mp_400_fixed_wheel_left_joint</left_joint>
         <right_joint>mp_400_fixed_wheel_right_joint</right_joint>
@@ -43,7 +43,7 @@
       <always_on>true</always_on>
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
-      <update_rate>100</update_rate>
+      <update_rate>10</update_rate>
       <ray>
         <scan>
           <horizontal>
