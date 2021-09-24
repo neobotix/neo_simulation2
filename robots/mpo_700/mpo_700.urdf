@@ -13,7 +13,7 @@
     <sensor name="lidar_1_sensor" type="ray">
       <always_on>true</always_on>
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>40</update_rate>
       <ray>
         <scan>
@@ -54,7 +54,7 @@
   <gazebo reference="lidar_2_link">
     <sensor name="lidar_2_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>40</update_rate>
       <ray>
         <scan>
@@ -97,7 +97,8 @@
        
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
-      <robotNamespace> </robotNamespace>
+      <robotNamespace><remapping>/tf:=tf</remapping>  </robotNamespace>
+      <ros>    <remapping>/tf:=tf</remapping>    </ros>
 
       <!-- Set control loop update rate -->
       <odometryRate>100</odometryRate>
@@ -118,14 +119,14 @@
       <covariance_yaw>0.0001</covariance_yaw>
 
     </plugin>  </gazebo>
+
   <!-- camera -->
-<gazebo reference="camera_link_gazebo">
+<!-- <gazebo reference="camera_link_gazebo">
 
       <sensor type="depth" name="camera_link_gazebo">
-          <!-- Set always_on only sensor, not on plugin -->
+
           <always_on>1</always_on>
 
-          <!-- Set update_rate only sensor, not on plugin -->
           <update_rate>15</update_rate>
 
           <camera name="camera_link">
@@ -141,31 +142,22 @@
           </camera>
 
           <plugin name="camera_link" filename="libgazebo_ros_camera.so">
-            <!-- Change namespace, camera name and topics so:
-                 * Raw images are published to: /custom_ns/custom_camera/custom_image
-                 * Depth images are published to: /custom_ns/custom_camera/custom_image_depth
-                 * Raw image camera info is published to: /custom_ns/custom_camera/custom_info_raw
-                 * Depth image camera info is published to: /custom_ns/custom_camera/custom_info_depth
-                 * Point cloud is published to: /custom_ns/custom_camera/custom_points 
-            -->
+
             <ros>
             </ros>
 
-            <!-- Set camera name. If empty, defaults to sensor name (i.e. "sensor_name") -->
             <camera_name> </camera_name>
 
-            <!-- Set TF frame name. If empty, defaults to link name (i.e. "link_name") -->
             <frame_name> </frame_name>
 
             <hack_baseline>0.07</hack_baseline>
 
-            <!-- No need to repeat distortion parameters or to set autoDistortion -->
 
              <min_depth>0.001</min_depth>
              <max_depth>300.0</max_depth>
           </plugin>
         </sensor>
-      </gazebo>
+      </gazebo>-->
 
   <link name="base_footprint"/>
   <joint name="base_footprint_joint" type="fixed">
@@ -488,7 +480,7 @@
     <mu2>0.0001</mu2>
   </gazebo>
 
-<joint name="camera_joint" type="fixed">
+<!-- <joint name="camera_joint" type="fixed">
     <axis xyz="0 1 0"/>
     <origin rpy="0 0 3.14159" xyz="-0.228 0.015 0.461"/>
     <parent link="base_link"/>
@@ -528,7 +520,7 @@
   </link>
   <link name="camera_link_optical"/>
 
-  <link name="camera_link_gazebo"/>
+  <link name="camera_link_gazebo"/> -->
 
 
 
