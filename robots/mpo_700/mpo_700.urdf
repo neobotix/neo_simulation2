@@ -13,7 +13,7 @@
     <sensor name="lidar_1_sensor" type="ray">
       <always_on>true</always_on>
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>40</update_rate>
       <ray>
         <scan>
@@ -54,7 +54,7 @@
   <gazebo reference="lidar_2_link">
     <sensor name="lidar_2_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>40</update_rate>
       <ray>
         <scan>
