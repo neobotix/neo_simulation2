@@ -97,7 +97,8 @@
        
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
-      <robotNamespace> </robotNamespace>
+      <robotNamespace><remapping>/tf:=tf</remapping>  </robotNamespace>
+      <ros>    <remapping>/tf:=tf</remapping>    </ros>
 
       <!-- Set control loop update rate -->
       <odometryRate>100</odometryRate>
