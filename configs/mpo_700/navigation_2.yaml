@@ -1,0 +1,289 @@
+amcl:
+  ros__parameters:
+    alpha1: 0.1
+    alpha3: 0.1
+    base_frame_id: base_footprint
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    global_frame_id: map
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 2.0
+    laser_max_range: -1.0
+    laser_min_range: -1.0
+    laser_model_type: likelihood_field
+    max_beams: 200
+    max_particles: 2000
+    min_particles: 500
+    odom_frame_id: odom
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 2
+    robot_model_type: omnidirectional
+    save_pose_rate: 0.5
+    scan_topic: scan
+    set_initial_pose: true
+    sigma_hit: 0.2
+    tf_broadcast: true
+    transform_tolerance: 0.1
+    update_min_a: 0.1
+    update_min_d: 0.1
+    use_sim_time: true
+amcl_map_client:
+  ros__parameters:
+    use_sim_time: true
+amcl_rclcpp_node:
+  ros__parameters:
+    use_sim_time: true
+bt_navigator:
+  ros__parameters:
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    enable_groot_monitoring: true
+    global_frame: map
+    groot_zmq_publisher_port: 1666
+    groot_zmq_server_port: 1667
+    odom_topic: /odom
+    plugin_lib_names:
+    - nav2_compute_path_to_pose_action_bt_node
+    - nav2_compute_path_through_poses_action_bt_node
+    - nav2_follow_path_action_bt_node
+    - nav2_back_up_action_bt_node
+    - nav2_spin_action_bt_node
+    - nav2_wait_action_bt_node
+    - nav2_clear_costmap_service_bt_node
+    - nav2_is_stuck_condition_bt_node
+    - nav2_goal_reached_condition_bt_node
+    - nav2_goal_updated_condition_bt_node
+    - nav2_initial_pose_received_condition_bt_node
+    - nav2_reinitialize_global_localization_service_bt_node
+    - nav2_rate_controller_bt_node
+    - nav2_distance_controller_bt_node
+    - nav2_speed_controller_bt_node
+    - nav2_truncate_path_action_bt_node
+    - nav2_goal_updater_node_bt_node
+    - nav2_recovery_node_bt_node
+    - nav2_pipeline_sequence_bt_node
+    - nav2_round_robin_node_bt_node
+    - nav2_transform_available_condition_bt_node
+    - nav2_time_expired_condition_bt_node
+    - nav2_distance_traveled_condition_bt_node
+    - nav2_single_trigger_bt_node
+    - nav2_is_battery_low_condition_bt_node
+    - nav2_navigate_through_poses_action_bt_node
+    - nav2_navigate_to_pose_action_bt_node
+    - nav2_remove_passed_goals_action_bt_node
+    - nav2_planner_selector_bt_node
+    - nav2_controller_selector_bt_node
+    - nav2_goal_checker_selector_bt_node
+    robot_base_frame: base_link
+    use_sim_time: true
+bt_navigator_rclcpp_node:
+  ros__parameters:
+    use_sim_time: true
+controller_server:
+  ros__parameters:
+    FollowPath:
+      acc_lim_theta: 0.8
+      acc_lim_x: 0.25
+      acc_lim_y: 0.25
+      cost_x_gain: 0.1
+      cost_y_gain: 0.1
+      cost_y_lookahead_dist: 0.0
+      cost_y_lookahead_time: 0.3
+      cost_yaw_gain: 2.0
+      differential_drive: false
+      goal_tune_time: 0.5
+      lookahead_dist: 1.0
+      lookahead_time: 0.4
+      low_pass_gain: 0.2
+      max_backup_dist: 0.0
+      max_cost: 0.95
+      max_curve_vel: 0.4
+      max_goal_dist: 0.5
+      max_rot_vel: 0.8
+      max_trans_vel: 0.8
+      max_vel_x: 0.8
+      max_vel_y: 0.5
+      min_rot_vel: -0.8
+      min_stop_dist: 0.2
+      min_trans_vel: 0.1
+      min_vel_x: -0.2
+      min_vel_y: -0.5
+      plugin: neo_local_planner::NeoLocalPlanner
+      pos_x_gain: 1.0
+      pos_y_gain: 1.0
+      start_yaw_error: 0.5
+      static_yaw_gain: 3.0
+      xy_goal_tolerance: 0.01
+      yaw_goal_tolerance: 0.005
+    controller_frequency: 100.0
+    controller_plugin_types:
+    - neo_local_planner::NeoLocalPlanner
+    controller_plugins:
+    - FollowPath
+    goal_checker:
+      plugin: nav2_controller::SimpleGoalChecker
+      stateful: true
+      xy_goal_tolerance: 0.05
+      yaw_goal_tolerance: 0.05
+    progress_checker:
+      movement_time_allowance: 100.0
+      plugin: nav2_controller::SimpleProgressChecker
+      required_movement_radius: 0.5
+controller_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: true
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      always_send_full_costmap: true
+      footprint: '[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]'
+      footprint_padding: 0.0
+      global_frame: map
+      inflation_layer:
+        cost_scaling_factor: 4.0
+        inflation_radius: 1.0
+        plugin: nav2_costmap_2d::InflationLayer
+      obstacle_layer:
+        enabled: true
+        observation_sources: scan scan1
+        plugin: nav2_costmap_2d::ObstacleLayer
+        scan:
+          clearing: true
+          data_type: LaserScan
+          marking: true
+          max_obstacle_height: 2.0
+          topic: /mpo_7002/scan
+        scan1:
+          clearing: true
+          data_type: LaserScan
+          marking: true
+          max_obstacle_height: 2.0
+          topic: /mpo_7002/scan2
+      plugins:
+      - static_layer
+      - obstacle_layer
+      - inflation_layer
+      publish_frequency: 1.0
+      resolution: 0.05
+      robot_base_frame: base_footprint
+      static_layer:
+        map_subscribe_transient_local: true
+        plugin: nav2_costmap_2d::StaticLayer
+      track_unknown_space: true
+      update_frequency: 0.4
+      use_sim_time: true
+  global_costmap_client:
+    ros__parameters:
+      use_sim_time: true
+  global_costmap_rclcpp_node:
+    ros__parameters:
+      use_sim_time: true
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      always_send_full_costmap: true
+      footprint: '[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]'
+      footprint_padding: 0.0
+      global_frame: odom
+      height: 5
+      inflation_layer:
+        cost_scaling_factor: 4.0
+        inflation_radius: 1.0
+        plugin: nav2_costmap_2d::InflationLayer
+      obstacle_layer:
+        enabled: true
+        observation_sources: scan scan1
+        plugin: nav2_costmap_2d::ObstacleLayer
+        scan:
+          clearing: true
+          data_type: LaserScan
+          marking: true
+          max_obstacle_height: 2.0
+          topic: /mpo_7002/scan
+        scan1:
+          clearing: true
+          data_type: LaserScan
+          marking: true
+          max_obstacle_height: 2.0
+          topic: /mpo_7002/scan2
+      plugins:
+      - obstacle_layer
+      - inflation_layer
+      publish_frequency: 1.0
+      resolution: 0.02
+      robot_base_frame: base_footprint
+      rolling_window: true
+      update_frequency: 10.0
+      use_sim_time: true
+      width: 5
+  local_costmap_client:
+    ros__parameters:
+      use_sim_time: true
+  local_costmap_rclcpp_node:
+    ros__parameters:
+      use_sim_time: true
+map_saver:
+  ros__parameters:
+    free_thresh_default: 0.25
+    map_subscribe_transient_local: false
+    occupied_thresh_default: 0.65
+    save_map_timeout: 5000
+    use_sim_time: true
+map_server:
+  ros__parameters:
+    use_sim_time: true
+    yaml_filename: neo_track1.yaml
+planner_server:
+  ros__parameters:
+    GridBased:
+      allow_unknown: true
+      plugin: nav2_navfn_planner/NavfnPlanner
+      tolerance: 0.5
+      use_astar: false
+    expected_planner_frequency: 5.0
+    planner_plugins:
+    - GridBased
+    use_sim_time: true
+planner_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: true
+recoveries_server:
+  ros__parameters:
+    backup:
+      plugin: nav2_recoveries/BackUp
+    costmap_topic: local_costmap/costmap_raw
+    cycle_frequency: 10.0
+    footprint_topic: local_costmap/published_footprint
+    global_frame: odom
+    max_rotational_vel: 1.0
+    min_rotational_vel: 0.4
+    recovery_plugins:
+    - spin
+    - backup
+    - wait
+    robot_base_frame: base_link
+    rotational_acc_lim: 3.2
+    simulate_ahead_time: 2.0
+    spin:
+      plugin: nav2_recoveries/Spin
+    transform_timeout: 0.1
+    use_sim_time: true
+    wait:
+      plugin: nav2_recoveries/Wait
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: true
+waypoint_follower:
+  ros__parameters:
+    loop_rate: 20
+    stop_on_failure: false
+    wait_at_waypoint:
+      enabled: true
+      plugin: nav2_waypoint_follower::WaitAtWaypoint
+      waypoint_pause_duration: 200
+    waypoint_task_executor_plugin: wait_at_waypoint
