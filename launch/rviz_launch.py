@@ -49,23 +49,14 @@ def generate_launch_description():
 
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         'rviz_config',
-        default_value=os.path.join(bringup_dir, 'rviz', 'nav2_default_view.rviz'),
+        default_value=os.path.join(bringup_dir, 'rviz', 'nav2_namespaced_view.rviz'),
         description='Full path to the RVIZ config file to use')
-
-    # Launch rviz
-    start_rviz_cmd = Node(
-        condition=UnlessCondition(use_namespace),
-        package='rviz2',
-        executable='rviz2',
-        arguments=['-d', rviz_config_file],
-        output='screen')
 
     namespaced_rviz_config_file = ReplaceString(
             source_file=rviz_config_file,
             replacements={'<robot_namespace>': ('/', namespace)})
 
     start_namespaced_rviz_cmd = Node(
-        condition=IfCondition(use_namespace),
         package='rviz2',
         executable='rviz2',
         namespace=namespace,
@@ -77,14 +68,7 @@ def generate_launch_description():
                     ('/clicked_point', 'clicked_point'),
                     ('/initialpose', 'initialpose')])
 
-    exit_event_handler = RegisterEventHandler(
-        condition=UnlessCondition(use_namespace),
-        event_handler=OnProcessExit(
-            target_action=start_rviz_cmd,
-            on_exit=EmitEvent(event=Shutdown(reason='rviz exited'))))
-
     exit_event_handler_namespaced = RegisterEventHandler(
-        condition=IfCondition(use_namespace),
         event_handler=OnProcessExit(
             target_action=start_namespaced_rviz_cmd,
             on_exit=EmitEvent(event=Shutdown(reason='rviz exited'))))
@@ -98,11 +82,9 @@ def generate_launch_description():
     ld.add_action(declare_rviz_config_file_cmd)
 
     # Add any conditioned actions
-    ld.add_action(start_rviz_cmd)
     ld.add_action(start_namespaced_rviz_cmd)
 
     # Add other nodes and processes we need
-    ld.add_action(exit_event_handler)
     ld.add_action(exit_event_handler_namespaced)
 
     return ld
