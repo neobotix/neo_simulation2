@@ -14,7 +14,7 @@
       <always_on>true</always_on>
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
-      <update_rate>40</update_rate>
+      <update_rate>10</update_rate>
       <ray>
         <scan>
           <horizontal>
@@ -55,7 +55,7 @@
     <sensor name="lidar_2_sensor" type="ray">
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
-      <update_rate>40</update_rate>
+      <update_rate>10</update_rate>
       <ray>
         <scan>
           <horizontal>
