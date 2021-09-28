@@ -14,6 +14,7 @@ amcl:
     global_frame_id: "map"
     lambda_short: 0.1
     set_initial_pose: true
+    initial_pose: [1.0, 0.0, 0.0, 0.0]
     laser_likelihood_max_dist: 2.0
     laser_max_range: -1.44
     laser_min_range: 1.44
