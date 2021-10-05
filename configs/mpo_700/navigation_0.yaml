@@ -93,56 +93,56 @@ neo_localization:
     
     particle_cloud: particlecloud
 
-# amcl:
-#   ros__parameters:
-#     use_sim_time: True
-#     alpha1: 0.1
-#     # alpha2: 1.0
-#     alpha3: 0.1
-#     # alpha4: 1.0
-#     # alpha5: 1.0
-#     base_frame_id: "base_footprint"
-#     beam_skip_distance: 0.5
-#     beam_skip_error_threshold: 0.9
-#     beam_skip_threshold: 0.3
-#     do_beamskip: false
-#     global_frame_id: "map"
-#     lambda_short: 0.1
-#     set_initial_pose: true
-#     initial_pose: [0.0, 2.0, 0.0]
-#     laser_likelihood_max_dist: 2.0
-#     laser_max_range: -1.0
-#     laser_min_range: -1.0
-#     laser_model_type: "likelihood_field"
-#     max_beams: 200
-#     max_particles: 2000
-#     min_particles: 500
-#     odom_frame_id: "odom"
-#     pf_err: 0.05
-#     pf_z: 0.99
-#     recovery_alpha_fast: 0.0
-#     recovery_alpha_slow: 0.0
-#     resample_interval: 2
-#     robot_model_type: "omnidirectional"
-#     save_pose_rate: 0.5
-#     sigma_hit: 0.2
-#     tf_broadcast: true
-#     transform_tolerance: 0.1
-#     scan_topic: scan
-#     update_min_a: 0.1
-#     update_min_d: 0.1
-#     # z_hit: 0.5
-#     # z_max: 0.05
-#     # z_rand: 0.5
-#     # z_short: 0.05
+amcl:
+  ros__parameters:
+    use_sim_time: True
+    alpha1: 0.1
+    # alpha2: 1.0
+    alpha3: 0.1
+    # alpha4: 1.0
+    # alpha5: 1.0
+    base_frame_id: "base_footprint"
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    global_frame_id: "map"
+    lambda_short: 0.1
+    set_initial_pose: true
+    initial_pose: [0.0, 2.0, 0.0]
+    laser_likelihood_max_dist: 2.0
+    laser_max_range: -1.0
+    laser_min_range: -1.0
+    laser_model_type: "likelihood_field"
+    max_beams: 200
+    max_particles: 2000
+    min_particles: 500
+    odom_frame_id: "odom"
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 2
+    robot_model_type: "omnidirectional"
+    save_pose_rate: 0.5
+    sigma_hit: 0.2
+    tf_broadcast: true
+    transform_tolerance: 0.1
+    scan_topic: scan
+    update_min_a: 0.1
+    update_min_d: 0.1
+    # z_hit: 0.5
+    # z_max: 0.05
+    # z_rand: 0.5
+    # z_short: 0.05
 
-# amcl_map_client:
-#   ros__parameters:
-#     use_sim_time: True
+amcl_map_client:
+  ros__parameters:
+    use_sim_time: True
 
-# amcl_rclcpp_node:
-#   ros__parameters:
-#     use_sim_time: True
+amcl_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True
 
 bt_navigator:
   ros__parameters:
@@ -197,7 +197,7 @@ controller_server:
     # controller server parameters (see Controller Server for more info)
     controller_plugins: ["FollowPath"]
     controller_frequency: 100.0
-    controller_plugin_types: ["nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"]
+    controller_plugin_types: ["neo_local_planner::NeoLocalPlanner"]
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.5
@@ -208,28 +208,41 @@ controller_server:
       yaw_goal_tolerance: 0.05
       stateful: True
     FollowPath:
-      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.8
-      max_linear_accel: 0.8
-      max_linear_decel: 0.8
-      lookahead_dist: 0.6
-      min_lookahead_dist: 0.3 #0.3
-      max_lookahead_dist: 0.9 #0.9
-      lookahead_time: 1.5 #1.5
-      rotate_to_heading_angular_vel: 0.9
-      transform_tolerance: 0.1
-      use_velocity_scaled_lookahead_dist: false
-      min_approach_linear_velocity: 0.01
-      use_approach_linear_velocity_scaling: true
-      max_allowed_time_to_collision: 1.0
-      use_regulated_linear_velocity_scaling: true
-      use_cost_regulated_linear_velocity_scaling: false
-      regulated_linear_scaling_min_radius:  0.9
-      regulated_linear_scaling_min_speed: 0.25
-      use_rotate_to_heading: true
-      rotate_to_heading_min_angle: 0.785
-      max_angular_accel: 10.0
-      allow_reversing: false
+      plugin: "neo_local_planner::NeoLocalPlanner"
+      acc_lim_x : 0.25
+      acc_lim_y : 0.25
+      acc_lim_theta : 0.8
+      max_vel_x : 0.8
+      min_vel_x : -0.2
+      max_vel_y : 0.5
+      min_vel_y : -0.5
+      max_rot_vel : 0.8
+      min_rot_vel : -0.8
+      max_trans_vel : 0.8
+      min_trans_vel : 0.1
+      yaw_goal_tolerance : 0.005
+      xy_goal_tolerance : 0.01
+      goal_tune_time : 0.5
+      lookahead_time : 0.4
+      lookahead_dist : 1.0
+      start_yaw_error : 0.5
+      pos_x_gain : 1.0
+      pos_y_gain : 1.0
+      static_yaw_gain : 3.0
+      cost_x_gain : 0.1
+      cost_y_gain : 0.1
+      cost_y_lookahead_dist : 0.0
+      cost_y_lookahead_time : 0.3
+      cost_yaw_gain : 2.0
+      low_pass_gain : 0.2
+      max_cost : 0.95
+      max_curve_vel : 0.4
+      max_goal_dist : 0.5
+      max_backup_dist : 0.0
+      min_stop_dist : 0.2
+      differential_drive : false
+      odom_topic: odom
+      local_plan_topic: local_plan
 
 controller_server_rclcpp_node:
   ros__parameters:
