@@ -7,14 +7,18 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
+from launch.conditions import IfCondition
+
 
 MY_NEO_ROBOT = os.environ['MY_ROBOT']
 MY_NEO_ENVIRONMENT = os.environ['MAP_NAME']
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    use_amcl = LaunchConfiguration('use_amcl', default='False')
+    use_sim_time = LaunchConfiguration('use_sim_time', default='True')
+    namespace = LaunchConfiguration('namespace', default='')
     map_dir = LaunchConfiguration(
         'map',
         default=os.path.join(
@@ -30,30 +34,34 @@ def generate_launch_description():
             'configs/'+MY_NEO_ROBOT,
             param_file_name))
 
+    simulation_dir = os.path.join(get_package_share_directory('neo_simulation2'), 'launch')
+
     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
 
     return LaunchDescription([
-        DeclareLaunchArgument(
-            'map',
-            default_value=map_dir,
-            description='Full path to map file to load'),
-
-        DeclareLaunchArgument(
-            'params_file',
-            default_value=param_dir,
-            description='Full path to param file to load'),
-
-        DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='true',
-            description='Use simulation (Gazebo) clock if true'),
-
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
+            PythonLaunchDescriptionSource([simulation_dir, '/localization_neo.launch.py']),
+            condition=IfCondition(PythonExpression(['not ', use_amcl])),
             launch_arguments={
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
-                'params_file': param_dir}.items(),
-        )
+                'params_file': param_dir,
+                'namespace': namespace}.items(),
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_launch.py']),
+            condition=IfCondition(use_amcl),
+            launch_arguments={
+                'map': map_dir,
+                'use_sim_time': use_sim_time,
+                'params_file': param_dir,
+                'namespace': namespace}.items(),
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(nav2_launch_file_dir, 'navigation_launch.py')),
+            launch_arguments={'namespace': namespace,
+                              'use_sim_time': use_sim_time,
+                              'params_file': param_dir}.items()),
     ])
