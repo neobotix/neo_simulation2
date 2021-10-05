@@ -4,11 +4,11 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch_ros.actions import Node
+from launch_ros.actions import Node, PushRosNamespace   
 from launch.conditions import IfCondition
 
 
@@ -19,6 +19,7 @@ def generate_launch_description():
     use_amcl = LaunchConfiguration('use_amcl', default='False')
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
     namespace = LaunchConfiguration('namespace', default='')
+    use_namespace = LaunchConfiguration('use_namespace', default='True')
     map_dir = LaunchConfiguration(
         'map',
         default=os.path.join(
@@ -40,6 +41,11 @@ def generate_launch_description():
 
 
     return LaunchDescription([
+        GroupAction([
+        PushRosNamespace(
+            condition=IfCondition(use_namespace),
+            namespace=namespace), 
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([simulation_dir, '/localization_neo.launch.py']),
             condition=IfCondition(PythonExpression(['not ', use_amcl])),
@@ -64,4 +70,5 @@ def generate_launch_description():
             launch_arguments={'namespace': namespace,
                               'use_sim_time': use_sim_time,
                               'params_file': param_dir}.items()),
+        ])
     ])

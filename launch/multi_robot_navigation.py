@@ -26,9 +26,6 @@ def generate_launch_description():
 
     bringup = []
 
-    remappings = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
-
     map_dir = LaunchConfiguration(
         'map',
         default=os.path.join(
@@ -38,11 +35,11 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
-    nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
+    neo_sim_launch_file_dir = os.path.join(get_package_share_directory('neo_simulation2'), 'launch')
 
     for i in range(0, int(MY_NO_ROBOTS)):
         bringup.append(IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
+            PythonLaunchDescriptionSource([neo_sim_launch_file_dir, '/navigation.launch.py']),
             launch_arguments={
                 'use_namespace': 'True',
                 'namespace': MY_NEO_ROBOT+str(i),
