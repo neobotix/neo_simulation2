@@ -1,8 +1,8 @@
-neo_localization:
+neo_localization2_node:
   ros__parameters:
-    base_frame: "base_footprint"
+    base_frame: "mpo_7000/base_footprint"
 
-    odom_frame: "odom"
+    odom_frame: "mpo_7000/odom"
 
     map_frame: "map"
 
@@ -17,7 +17,7 @@ neo_localization:
     sample_rate: 10
 
     # localization update rate [ms]
-    loc_update_time: 100
+    loc_update_time: 10
 
     # map tile update rate [1/s]
     map_update_rate: 0.5
@@ -72,7 +72,7 @@ neo_localization:
     solver_gain: 0.1
 
     # solver update damping, higher damping = more stability / slower convergence
-    solver_damping: 1000
+    solver_damping: 1000.0
 
     # number of gauss-newton iterations per sample per scan
     solver_iterations: 20
@@ -80,18 +80,22 @@ neo_localization:
     # maximum wait for getting transforms [s]
     transform_timeout: 0.2
 
+    namespace: ""
+
     # if to broadcast map frame
     broadcast_tf: true
 
-    scan_topic: scan
+    scan_topic: /mpo_7000/scan
 
-    initialpose: initialpose
+    initialpose: /mpo_7000/initialpose
     
-    map_tile: map_tile
+    map_tile: /mpo_7000/map_tile
     
-    map_pose: map_pose
+    map_pose: /mpo_7000/map_pose
     
-    particle_cloud: particlecloud
+    particle_cloud: /mpo_7000/particlecloud
+
+    m_map_topic: map
 
 amcl:
   ros__parameters:
@@ -101,7 +105,7 @@ amcl:
     alpha3: 0.1
     # alpha4: 1.0
     # alpha5: 1.0
-    base_frame_id: "base_footprint"
+    base_frame_id: "mpo_7000/base_footprint"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -117,7 +121,7 @@ amcl:
     max_beams: 200
     max_particles: 2000
     min_particles: 500
-    odom_frame_id: "odom"
+    odom_frame_id: "mpo_7000/odom"
     pf_err: 0.05
     pf_z: 0.99
     recovery_alpha_fast: 0.0
@@ -128,7 +132,7 @@ amcl:
     sigma_hit: 0.2
     tf_broadcast: true
     transform_tolerance: 0.1
-    scan_topic: scan
+    scan_topic: /mpo_7000/scan
     update_min_a: 0.1
     update_min_d: 0.1
     # z_hit: 0.5
@@ -148,7 +152,7 @@ bt_navigator:
   ros__parameters:
     use_sim_time: True
     global_frame: map
-    robot_base_frame: base_link
+    robot_base_frame: mpo_7000/base_footprint
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
@@ -241,8 +245,8 @@ controller_server:
       max_backup_dist : 0.0
       min_stop_dist : 0.2
       differential_drive : false
-      odom_topic: odom
-      local_plan_topic: local_plan
+      odom_topic: /mpo_7000/odom
+      local_plan_topic: /mpo_7000/local_plan
 
 controller_server_rclcpp_node:
   ros__parameters:
@@ -253,8 +257,8 @@ local_costmap:
     ros__parameters:
       update_frequency: 10.0
       publish_frequency: 1.0
-      global_frame: odom
-      robot_base_frame: base_footprint
+      global_frame: mpo_7000/odom
+      robot_base_frame: mpo_7000/base_footprint
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
       use_sim_time: True
@@ -298,8 +302,10 @@ global_costmap:
       update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: base_footprint
+      robot_base_frame: mpo_7000/base_footprint
+      map_topic: /map
       footprint_padding: 0.
+      rolling_window: false
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
       use_sim_time: True
       # robot_radius: 0.22
@@ -311,14 +317,12 @@ global_costmap:
         enabled: True
         observation_sources: scan scan1
         scan:
-          topic: /mpo_7000/scan
-          max_obstacle_height: 2.0
+          topic: mpo_7000/scan
           clearing: True
           marking: True
           data_type: "LaserScan"
         scan1:
-          topic: /mpo_7000/scan2
-          max_obstacle_height: 2.0
+          topic: mpo_7000/scan2
           clearing: True
           marking: True
           data_type: "LaserScan"
@@ -377,18 +381,14 @@ recoveries_server:
       plugin: "nav2_recoveries/BackUp"
     wait:
       plugin: "nav2_recoveries/Wait"
-    global_frame: odom
-    robot_base_frame: base_link
+    global_frame: mpo_7000/odom
+    robot_base_frame: mpo_7000/base_link
     transform_timeout: 0.1
     use_sim_time: true
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
     min_rotational_vel: 0.4
     rotational_acc_lim: 3.2
-
-robot_state_publisher:
-  ros__parameters:
-    use_sim_time: True
 
 waypoint_follower:
   ros__parameters:

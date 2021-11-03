@@ -30,10 +30,6 @@ def generate_launch_description():
     ld = LaunchDescription()
     
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    remapping_tf = [('/tf', 'tf'),
-                  ('/tf_static', 'tf_static')]
-
-    remapping_cmd_vel = [('/cmd_vel', 'cmd_vel')]
 
     robot_dir = LaunchConfiguration(
         'robot_dir',
@@ -77,7 +73,7 @@ def generate_launch_description():
     ld.add_action(gazebo)
 
     for i in range(0, int(MY_NO_ROBOTS)):
-        spawn_entity.append(Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', MY_NEO_ROBOT+ str(i) ,'-y', str(2.0 - int(i)) ,'-file', urdf, '-robot_namespace', "/"+MY_NEO_ROBOT+ str(i)], output='screen', remappings=remapping_tf))
+        spawn_entity.append(Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', MY_NEO_ROBOT+ str(i) ,'-y', str(2.0 - int(i)) ,'-file', urdf, '-robot_namespace', "/"+MY_NEO_ROBOT+ str(i)], output='screen'))
 
 
         start_robot_state_publisher_cmd.append(Node(
@@ -85,29 +81,53 @@ def generate_launch_description():
             executable='robot_state_publisher',
             name='robot_state_publisher',
             output='screen',
-            namespace=MY_NEO_ROBOT+ str(i),
-            parameters=[{'use_sim_time': use_sim_time,'robot_description': robot_desc}],
-            arguments=[urdf],
-            remappings=remapping_tf))
+            parameters=[{'use_sim_time': use_sim_time,'robot_description': robot_desc, 'frame_prefix':MY_NEO_ROBOT+ str(i) + "/", 'publish_frequency': 50.0 }],
+            arguments=[urdf]))
 
         teleop.append(Node(package='teleop_twist_keyboard',executable="teleop_twist_keyboard",
         output='screen',
         prefix = 'xterm -e',
         namespace=MY_NEO_ROBOT+ str(i),
-        name='teleop',
-        remappings=remapping_cmd_vel))
+        name='teleop'))
 
-        rviz.append(IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('neo_simulation2'), 'launch', 'rviz_launch.py')),
-            launch_arguments={'namespace': MY_NEO_ROBOT+ str(i),
-                              'use_namespace': "True"}.items()))
+    relay_topic_tf_1 = Node(
+            package='topic_tools',
+            executable = 'relay',
+            name='relay',
+            output='screen',
+            parameters=[{'input_topic': "/mpo_7001/tf",'output_topic': "/tf", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
 
+    relay_topic_tf_2 = Node(
+            package='topic_tools',
+            executable = 'relay',
+            name='relay',
+            output='screen',
+            parameters=[{'input_topic': "/mpo_7000/tf",'output_topic': "/tf", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
+
+    relay_topic_tf_static_1 = Node(
+            package='topic_tools',
+            executable = 'relay',
+            name='relay',
+            output='screen',
+            parameters=[{'input_topic': "/mpo_7001/tf_static",'output_topic': "/tf_static", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
+
+    relay_topic_tf_static_2 = Node(
+            package='topic_tools',
+            executable = 'relay',
+            name='relay',
+            output='screen',
+            parameters=[{'input_topic': "/mpo_7000/tf_static",'output_topic': "/tf_static", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
+
+    ld.add_action(relay_topic_tf_1)
+    ld.add_action(relay_topic_tf_2)
+
+    ld.add_action(relay_topic_tf_static_1)
+    ld.add_action(relay_topic_tf_static_2)
     
     for i in range(0, int(MY_NO_ROBOTS)):
         ld.add_action(spawn_entity[i])
         ld.add_action(start_robot_state_publisher_cmd[i])   
         ld.add_action(teleop[i])
-        ld.add_action(rviz[i]) 
+        # ld.add_action(rviz[i]) 
 
     return ld

@@ -45,6 +45,15 @@ def generate_launch_description():
         PushRosNamespace(
             condition=IfCondition(use_namespace),
             namespace=namespace), 
+            IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_launch.py']),
+            condition=IfCondition(use_amcl),
+            launch_arguments={
+                'map': map_dir,
+                'use_sim_time': use_sim_time,
+                'params_file': param_dir,
+                'namespace': namespace}.items(),
+        ),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([simulation_dir, '/localization_neo.launch.py']),
@@ -56,19 +65,9 @@ def generate_launch_description():
                 'namespace': namespace}.items(),
         ),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_launch.py']),
-            condition=IfCondition(use_amcl),
-            launch_arguments={
-                'map': map_dir,
-                'use_sim_time': use_sim_time,
-                'params_file': param_dir,
-                'namespace': namespace}.items(),
-        ),
-
-        IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(nav2_launch_file_dir, 'navigation_launch.py')),
             launch_arguments={'namespace': namespace,
                               'use_sim_time': use_sim_time,
-                              'params_file': param_dir}.items()),
+                              'params_file': param_dir}.items())
         ])
     ])
