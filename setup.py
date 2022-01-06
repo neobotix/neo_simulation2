@@ -4,7 +4,7 @@ package_name = 'neo_simulation2'
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='1.0.0',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -13,10 +13,10 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='pradheep',
+    maintainer='pradheep padmanabhan',
     maintainer_email='padhupradheep@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='ROS-2 Simulation packages for neobotix robots',
+    license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
