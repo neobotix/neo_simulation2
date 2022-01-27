@@ -57,6 +57,10 @@ def generate_launch_description():
 
     start_robot_state_publisher_cmd = []
 
+    relay_topics_tf = []
+
+    relay_topics_tf_static = []
+
     with open(urdf, 'r') as infp:
         robot_desc = infp.read()
 
@@ -85,46 +89,28 @@ def generate_launch_description():
             arguments=[urdf]))
 
         teleop.append(Node(package='teleop_twist_keyboard',executable="teleop_twist_keyboard",
-        output='screen',
-        prefix = 'xterm -e',
-        namespace=MY_NEO_ROBOT+ str(i),
-        name='teleop'))
+            output='screen',
+            prefix = 'xterm -e',
+            namespace=MY_NEO_ROBOT+ str(i),
+            name='teleop'))
 
-    relay_topic_tf_1 = Node(
+        relay_topics_tf.append(Node(
             package='topic_tools',
             executable = 'relay',
             name='relay',
             output='screen',
-            parameters=[{'input_topic': "/mpo_7001/tf",'output_topic': "/tf", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
+            parameters=[{'input_topic': MY_NEO_ROBOT+ str(i) + "/tf",'output_topic': "/tf", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}]))
 
-    relay_topic_tf_2 = Node(
+        relay_topics_tf_static.append(Node(
             package='topic_tools',
             executable = 'relay',
             name='relay',
             output='screen',
-            parameters=[{'input_topic': "/mpo_7000/tf",'output_topic': "/tf", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
-
-    relay_topic_tf_static_1 = Node(
-            package='topic_tools',
-            executable = 'relay',
-            name='relay',
-            output='screen',
-            parameters=[{'input_topic': "/mpo_7001/tf_static",'output_topic': "/tf_static", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
-
-    relay_topic_tf_static_2 = Node(
-            package='topic_tools',
-            executable = 'relay',
-            name='relay',
-            output='screen',
-            parameters=[{'input_topic': "/mpo_7000/tf_static",'output_topic': "/tf_static", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}])
-
-    ld.add_action(relay_topic_tf_1)
-    ld.add_action(relay_topic_tf_2)
-
-    ld.add_action(relay_topic_tf_static_1)
-    ld.add_action(relay_topic_tf_static_2)
+            parameters=[{'input_topic': MY_NEO_ROBOT+ str(i) + "/tf_static",'output_topic': "/tf_static", 'lazy': True, 'stealth ': True, 'monitor_rate': 100.0}]))
     
     for i in range(0, int(MY_NO_ROBOTS)):
+        ld.add_action(relay_topics_tf[i])
+        ld.add_action(relay_topics_tf_static[i])
         ld.add_action(spawn_entity[i])
         ld.add_action(start_robot_state_publisher_cmd[i])   
         ld.add_action(teleop[i])
