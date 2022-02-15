@@ -246,6 +246,30 @@ controller_server:
       max_backup_dist : 0.0
       min_stop_dist : 0.2
       differential_drive : false
+      allow_reversing: false
+
+      # plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      # desired_linear_vel: 0.5
+      # max_linear_accel: 0.8
+      # max_linear_decel: 0.8
+      # lookahead_dist: 0.6
+      # min_lookahead_dist: 0.3 #0.3
+      # max_lookahead_dist: 0.9 #0.9
+      # lookahead_time: 1.5 #1.5
+      # rotate_to_heading_angular_vel: 0.9
+      # transform_tolerance: 0.1
+      # use_velocity_scaled_lookahead_dist: false
+      # min_approach_linear_velocity: 0.01
+      # use_approach_linear_velocity_scaling: true
+      # max_allowed_time_to_collision: 1.0
+      # use_regulated_linear_velocity_scaling: true
+      # use_cost_regulated_linear_velocity_scaling: false
+      # regulated_linear_scaling_min_radius:  0.9
+      # regulated_linear_scaling_min_speed: 0.25
+      # use_rotate_to_heading: false
+      # rotate_to_heading_min_angle: 0.785
+      # max_angular_accel: 10.0
+      # allow_reversing: true
 
 controller_server_rclcpp_node:
   ros__parameters:
