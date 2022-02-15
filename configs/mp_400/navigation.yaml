@@ -203,7 +203,7 @@ controller_server:
     # RegulatedPurePursuitController Parameters
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 1.2
+      desired_linear_vel: 0.5
       max_linear_accel: 0.8
       max_linear_decel: 0.8
       lookahead_dist: 0.6
