@@ -247,6 +247,8 @@ controller_server:
       differential_drive : false
       odom_topic: /mpo_7000/odom
       local_plan_topic: /mpo_7000/local_plan
+      local_frame: "mpo_7001/odom"
+      base_frame: "mpo_7001/base_link"
 
 controller_server_rclcpp_node:
   ros__parameters:

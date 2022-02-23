@@ -151,7 +151,7 @@ amcl_rclcpp_node:
 bt_navigator:
   ros__parameters:
     use_sim_time: True
-    global_frame: mpo_7001/map
+    global_frame: map
     robot_base_frame: mpo_7001/base_link
     odom_topic: /odom
     bt_loop_duration: 10
@@ -247,6 +247,8 @@ controller_server:
       differential_drive : false
       odom_topic: /mpo_7001/odom
       local_plan_topic: /mpo_7001/local_plan
+      local_frame: "mpo_7001/odom"
+      base_frame: "mpo_7001/base_link"
 
 controller_server_rclcpp_node:
   ros__parameters:
