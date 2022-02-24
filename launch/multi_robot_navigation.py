@@ -35,6 +35,8 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
 
+    use_multi_robots = LaunchConfiguration('use_multi_robots', default='True')
+
     neo_sim_launch_file_dir = os.path.join(get_package_share_directory('neo_simulation2'), 'launch')
 
     for i in range(0, int(MY_NO_ROBOTS)):
@@ -45,6 +47,7 @@ def generate_launch_description():
                 'namespace': MY_NEO_ROBOT+str(i),
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
+                'use_multi_robots': use_multi_robots,
                 'params_file': os.path.join(
             get_package_share_directory('neo_simulation2'),
             'configs/'+MY_NEO_ROBOT,
