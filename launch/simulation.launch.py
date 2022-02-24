@@ -58,7 +58,8 @@ def generate_launch_description():
             ),
             launch_arguments={
                 'world': default_world_path,
-                'verbose': 'true'
+                'verbose': 'true',
+                'gui': 'false'
             }.items()
         )
 
