@@ -61,7 +61,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([neo_sim_launch_file_dir, '/neo_map_server.py']),
             launch_arguments={
                 'map': map_dir,
-                'namespace': MY_NEO_ROBOT+str(i),
                 'use_sim_time': use_sim_time,
                 }.items(),
         ))
