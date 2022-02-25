@@ -34,11 +34,6 @@ def generate_launch_description():
 
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', MY_NEO_ROBOT, '-file', urdf], output='screen')
 
-    rviz_config_dir = os.path.join(
-        get_package_share_directory('nav2_bringup'),
-        'rviz',
-        'nav2_default_view.rviz')
-
     start_robot_state_publisher_cmd = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -58,17 +53,8 @@ def generate_launch_description():
             ),
             launch_arguments={
                 'world': default_world_path,
-                'verbose': 'true'
+                'verbose': 'true',
             }.items()
         )
 
-    rviz =   Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', rviz_config_dir],
-            parameters=[{'use_sim_time': use_sim_time}],
-            output='screen')
-
-
-    return LaunchDescription([spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo, rviz])
+    return LaunchDescription([spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo])
