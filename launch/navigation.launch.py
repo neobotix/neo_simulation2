@@ -20,7 +20,6 @@ def generate_launch_description():
     use_amcl = LaunchConfiguration('use_amcl', default='False')
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
     namespace = LaunchConfiguration('namespace', default='')
-    use_namespace = LaunchConfiguration('use_namespace', default='True')
     map_dir = LaunchConfiguration(
         'map',
         default=os.path.join(
@@ -41,7 +40,7 @@ def generate_launch_description():
     return LaunchDescription([
         GroupAction([
         PushRosNamespace(
-            condition=IfCondition(use_namespace),
+            condition=IfCondition(use_multi_robots),
             namespace=namespace),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_neo.launch.py']),
