@@ -85,7 +85,7 @@ def generate_launch_description():
             executable='robot_state_publisher',
             name='robot_state_publisher',
             output='screen',
-            parameters=[{'use_sim_time': use_sim_time,'robot_description': robot_desc, 'frame_prefix':MY_NEO_ROBOT+ str(i) + "/", 'publish_frequency': 50.0 }],
+            parameters=[{'use_sim_time': use_sim_time,'robot_description': robot_desc, 'frame_prefix':MY_NEO_ROBOT+ str(i), 'publish_frequency': 50.0 }],
             arguments=[urdf]))
 
         teleop.append(Node(package='teleop_twist_keyboard',executable="teleop_twist_keyboard",

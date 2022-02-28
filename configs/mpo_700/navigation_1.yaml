@@ -1,8 +1,8 @@
 neo_localization2_node:
   ros__parameters:
-    base_frame: "mpo_7001/base_footprint"
+    base_frame: "base_footprint"
 
-    odom_frame: "mpo_7001/odom"
+    odom_frame: "odom"
 
     map_frame: "map"
 
@@ -105,7 +105,7 @@ amcl:
     alpha3: 0.1
     # alpha4: 1.0
     # alpha5: 1.0
-    base_frame_id: "mpo_7001/base_footprint"
+    base_frame_id: "mpo_7001base_footprint"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -121,7 +121,7 @@ amcl:
     max_beams: 200
     max_particles: 2000
     min_particles: 500
-    odom_frame_id: "mpo_7001/odom"
+    odom_frame_id: "mpo_7001odom"
     pf_err: 0.05
     pf_z: 0.99
     recovery_alpha_fast: 0.0
@@ -152,7 +152,7 @@ bt_navigator:
   ros__parameters:
     use_sim_time: True
     global_frame: map
-    robot_base_frame: mpo_7001/base_link
+    robot_base_frame: mpo_7001base_link
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
@@ -247,8 +247,8 @@ controller_server:
       differential_drive : false
       odom_topic: /mpo_7001/odom
       local_plan_topic: /mpo_7001/local_plan
-      local_frame: "mpo_7001/odom"
-      base_frame: "mpo_7001/base_link"
+      local_frame: "mpo_7001odom"
+      base_frame: "mpo_7001base_link"
 
 controller_server_rclcpp_node:
   ros__parameters:
@@ -260,8 +260,8 @@ local_costmap:
       update_frequency: 10.0
       publish_frequency: 1.0
       transform_tolerance: 0.5
-      global_frame: mpo_7001/odom
-      robot_base_frame: mpo_7001/base_footprint
+      global_frame: mpo_7001odom
+      robot_base_frame: mpo_7001base_footprint
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
       use_sim_time: True
@@ -305,7 +305,7 @@ global_costmap:
       update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: mpo_7001/base_footprint
+      robot_base_frame: mpo_7001base_footprint
       map_topic: /map
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
@@ -384,8 +384,8 @@ recoveries_server:
       plugin: "nav2_recoveries/BackUp"
     wait:
       plugin: "nav2_recoveries/Wait"
-    global_frame: mpo_7001/odom
-    robot_base_frame: mpo_7001/base_link
+    global_frame: mpo_7001odom
+    robot_base_frame: mpo_7001base_link
     transform_timeout: 0.1
     use_sim_time: true
     simulate_ahead_time: 2.0

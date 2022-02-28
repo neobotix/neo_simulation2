@@ -1,8 +1,8 @@
 neo_localization2_node:
   ros__parameters:
-    base_frame: "mpo_7000/base_footprint"
+    base_frame: "base_footprint"
 
-    odom_frame: "mpo_7000/odom"
+    odom_frame: "odom"
 
     map_frame: "map"
 
@@ -80,8 +80,6 @@ neo_localization2_node:
     # maximum wait for getting transforms [s]
     transform_timeout: 0.2
 
-    namespace: ""
-
     # if to broadcast map frame
     broadcast_tf: true
 
@@ -105,7 +103,7 @@ amcl:
     alpha3: 0.1
     # alpha4: 1.0
     # alpha5: 1.0
-    base_frame_id: "mpo_7000/base_footprint"
+    base_frame_id: "mpo_7000base_footprint"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -121,7 +119,7 @@ amcl:
     max_beams: 200
     max_particles: 2000
     min_particles: 500
-    odom_frame_id: "mpo_7000/odom"
+    odom_frame_id: "mpo_7000odom"
     pf_err: 0.05
     pf_z: 0.99
     recovery_alpha_fast: 0.0
@@ -247,8 +245,8 @@ controller_server:
       differential_drive : false
       odom_topic: /mpo_7000/odom
       local_plan_topic: /mpo_7000/local_plan
-      local_frame: "mpo_7001/odom"
-      base_frame: "mpo_7001/base_link"
+      local_frame: "mpo_7000odom"
+      base_frame: "mpo_7000base_link"
 
 controller_server_rclcpp_node:
   ros__parameters:
@@ -259,8 +257,8 @@ local_costmap:
     ros__parameters:
       update_frequency: 10.0
       publish_frequency: 1.0
-      global_frame: mpo_7000/odom
-      robot_base_frame: mpo_7000/base_footprint
+      global_frame: mpo_7000odom
+      robot_base_frame: mpo_7000base_footprint
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
       use_sim_time: True
@@ -304,7 +302,7 @@ global_costmap:
       update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: mpo_7000/base_footprint
+      robot_base_frame: mpo_7000base_footprint
       map_topic: /map
       footprint_padding: 0.
       rolling_window: false
@@ -383,8 +381,8 @@ recoveries_server:
       plugin: "nav2_recoveries/BackUp"
     wait:
       plugin: "nav2_recoveries/Wait"
-    global_frame: mpo_7000/odom
-    robot_base_frame: mpo_7000/base_link
+    global_frame: mpo_7000odom
+    robot_base_frame: mpo_7000base_link
     transform_timeout: 0.1
     use_sim_time: true
     simulate_ahead_time: 2.0
