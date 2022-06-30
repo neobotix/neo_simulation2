@@ -14,7 +14,7 @@ neo_localization2_node:
     # map tile update rate [1/s]
     map_update_rate: 0.5
     # map tile size in pixels
-    map_size: 1000
+    map_size: 2000
     # how often to downscale (half) the original map
     map_downscale: 0
     # how many 3x3 gaussian smoothing iterations are applied to the map
@@ -26,7 +26,7 @@ neo_localization2_node:
     #    how fast to increase particle spread when in 1D / 0D mode
     odometry_std_xy: 0.01
     # odometry error in yaw angle [rad/rad] [1]
-    #    how fast to increase particle spread when in 0D mode
+    #  how fast to increase particle spread when in 0D mode
     odometry_std_yaw: 0.01
     # minimum particle spread in x and y [m]
     min_sample_std_xy: 0.025
@@ -37,9 +37,9 @@ neo_localization2_node:
     # initial/maximum particle spread in yaw angle [rad]
     max_sample_std_yaw: 0.5
     # threshold for 1D / 2D decision making (minimum average second order gradient)
-    #   if worst gradient direction is below this value we go into 1D mode
-    #   if both gradient directions are below we may go into 0D mode, depending on disable_threshold
-    #   higher values will make it go into 1D / 0D mode earlier
+    # if worst gradient direction is below this value we go into 1D mode
+    # if both gradient directions are below we may go into 0D mode, depending on disable_threshold
+    # higher values will make it go into 1D / 0D mode earlier
     constrain_threshold: 0.1
     # threshold for 1D / 2D decision making (with or without orientation)
     #   higher values will make it go into 1D mode earlier
@@ -57,13 +57,13 @@ neo_localization2_node:
     # if to broadcast map frame
     broadcast_tf: true
     # Scan topic
-    scan_topic: scan
+    scan_topic: "/scan"
     # Initial Pose topic
-    initialpose: initialpose   
+    initialpose: initialpose
     # Map Tile topic
-    map_tile: map_tile   
+    map_tile: map_tile
     # Map Pose topic
-    map_pose: map_pose    
+    map_pose: map_pose
     # particle_cloud topic
     particle_cloud: particlecloud
     # amcl_pose topic
@@ -72,11 +72,11 @@ neo_localization2_node:
 amcl:
   ros__parameters:
     use_sim_time: True
-    alpha1: 0.1
-    # alpha2: 1.0
-    alpha3: 0.1
-    # alpha4: 1.0
-    # alpha5: 1.0
+    alpha1: 0.05
+    alpha2: 0.05
+    alpha3: 0.05
+    alpha4: 0.05
+    alpha5: 0.05
     base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
@@ -84,17 +84,17 @@ amcl:
     do_beamskip: false
     global_frame_id: "map"
     lambda_short: 0.1
-    set_initial_pose: true
+    set_initial_pose: false
     laser_likelihood_max_dist: 2.0
     laser_max_range: -1.0
     laser_min_range: -1.0
     laser_model_type: "likelihood_field"
     max_beams: 200
-    max_particles: 2000
+    max_particles: 1250
     min_particles: 500
     odom_frame_id: "odom"
     pf_err: 0.05
-    pf_z: 0.99
+    pf_z: 0.01
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
     resample_interval: 2
@@ -103,13 +103,12 @@ amcl:
     sigma_hit: 0.2
     tf_broadcast: true
     transform_tolerance: 0.1
-    scan_topic: scan
+    scan_topic: /scan
     update_min_a: 0.1
     update_min_d: 0.1
     # z_hit: 0.5
     # z_max: 0.05
     # z_rand: 0.5
-    # z_short: 0.05
 
 amcl_map_client:
   ros__parameters:
@@ -175,19 +174,15 @@ bt_navigator:
     - nav2_back_up_cancel_bt_node
     - nav2_drive_on_heading_cancel_bt_node
 
-bt_navigator_navigate_through_poses_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
-
-bt_navigator_navigate_to_pose_rclcpp_node:
+bt_navigator_rclcpp_node:
   ros__parameters:
     use_sim_time: True
 
 controller_server:
   ros__parameters:
     # controller server parameters (see Controller Server for more info)
-    use_sim_time: True
-    controller_frequency: 50.0
+    use_sim_time: False
+    controller_frequency: 100.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
@@ -203,7 +198,7 @@ controller_server:
       xy_goal_tolerance: 0.05
       yaw_goal_tolerance: 0.05
       stateful: True
-    # neo_local_planner Parameters
+    # neo_local_planner parameters
     FollowPath:
       plugin: "neo_local_planner::NeoLocalPlanner"
       # The x acceleration limit of the robot in meters/sec^2
@@ -242,7 +237,7 @@ controller_server:
       start_yaw_error : 0.5
       # Gain when adjusting final x position for goal [1/s]
       pos_x_gain : 1.0
-      # Gain when adjusting y position (holonomic only) [1/s]
+       # Gain when adjusting y position (holonomic only) [1/s]
       pos_y_gain : 1.0
       # Gain for adjusting yaw when not translating, or in case of holonomic drive  [1/s]
       static_yaw_gain : 3.0
@@ -270,29 +265,12 @@ controller_server:
       min_stop_dist : 0.6
       # If robot has differential drive, holonomic otherwise
       differential_drive : false
+      # Enable or disable reversing
+      allow_reversing: false
 
-      # plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      # desired_linear_vel: 0.5
-      # max_linear_accel: 0.8
-      # max_linear_decel: 0.8
-      # lookahead_dist: 0.6
-      # min_lookahead_dist: 0.3 #0.3
-      # max_lookahead_dist: 0.9 #0.9
-      # lookahead_time: 1.5 #1.5
-      # rotate_to_heading_angular_vel: 0.9
-      # transform_tolerance: 0.1
-      # use_velocity_scaled_lookahead_dist: false
-      # min_approach_linear_velocity: 0.01
-      # use_approach_linear_velocity_scaling: true
-      # max_allowed_time_to_collision: 1.0
-      # use_regulated_linear_velocity_scaling: true
-      # use_cost_regulated_linear_velocity_scaling: false
-      # regulated_linear_scaling_min_radius:  0.9
-      # regulated_linear_scaling_min_speed: 0.25
-      # use_rotate_to_heading: false
-      # rotate_to_heading_min_angle: 0.785
-      # max_angular_accel: 1.0
-      # allow_reversing: true
+controller_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True
 
 local_costmap:
   local_costmap:
@@ -301,17 +279,17 @@ local_costmap:
       publish_frequency: 1.0
       global_frame: odom
       robot_base_frame: base_link
-      footprint_padding: 0.0
+      footprint_padding: 0.
       footprint:  "[ [0.50,0.4],[-0.50,0.4],[-0.50,-0.4],[0.50,-0.4] ]"
       use_sim_time: True
       rolling_window: true
       width: 5
       height: 5
-      resolution: 0.02
+      resolution: 0.03
       plugins: ["obstacle_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 5.0
+        cost_scaling_factor: 4.0
         inflation_radius: 1.0
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
@@ -319,21 +297,17 @@ local_costmap:
         observation_sources: scan scan1
         scan:
           topic: /scan
-          obstacle_max_range: 5.0
           max_obstacle_height: 2.0
-          obstacle_min_range: 0.0
           raytrace_max_range: 8.0
-          raytrace_min_range: 0.0
+          obstacle_max_range: 5.0
           clearing: True
           marking: True
           data_type: "LaserScan"
         scan1:
           topic: /scan2
-          obstacle_max_range: 5.0
           max_obstacle_height: 2.0
-          obstacle_min_range: 0.0
           raytrace_max_range: 8.0
-          raytrace_min_range: 0.0
+          obstacle_max_range: 5.0
           clearing: True
           marking: True
           data_type: "LaserScan"
@@ -342,7 +316,7 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: base_link
@@ -350,6 +324,7 @@ global_costmap:
       footprint:  "[ [0.50,0.4],[-0.50,0.4],[-0.50,-0.4],[0.50,-0.4] ]"
       use_sim_time: True
       resolution: 0.05
+      track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
@@ -357,38 +332,33 @@ global_costmap:
         observation_sources: scan scan1
         scan:
           topic: /scan
-          obstacle_max_range: 5.0
           max_obstacle_height: 2.0
-          obstacle_min_range: 0.0
           raytrace_max_range: 8.0
-          raytrace_min_range: 0.0
+          obstacle_max_range: 5.0
           clearing: True
           marking: True
           data_type: "LaserScan"
         scan1:
           topic: /scan2
-          obstacle_max_range: 5.0
           max_obstacle_height: 2.0
-          obstacle_min_range: 0.0
           raytrace_max_range: 8.0
-          raytrace_min_range: 0.0
+          obstacle_max_range: 5.0
           clearing: True
           marking: True
           data_type: "LaserScan"
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
-        enabled: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 4.5
-        inflation_radius: 0.8
+        cost_scaling_factor: 5.0
+        inflation_radius: 1.0
       always_send_full_costmap: True
 
 map_server:
   ros__parameters:
     use_sim_time: True
-    yaml_filename: "neo_track1.yaml"
+    yaml_filename: "test.yaml"
 
 map_saver:
   ros__parameters:
@@ -400,7 +370,7 @@ map_saver:
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 20.0
+    expected_planner_frequency: 5.0
     use_sim_time: True
     planner_plugins: ["GridBased"]
     GridBased:
@@ -424,11 +394,15 @@ behavior_server:
     global_frame: odom
     robot_base_frame: base_link
     transform_timeout: 0.1
-    use_sim_time: true
+    use_sim_time: True
     simulate_ahead_time: 2.0
     max_rotational_vel: 0.5
     min_rotational_vel: 0.3
     rotational_acc_lim: 0.8
+
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: True
 
 waypoint_follower:
   ros__parameters:
