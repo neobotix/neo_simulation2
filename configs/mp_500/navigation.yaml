@@ -70,7 +70,7 @@ neo_localization2_node:
     solver_gain: 0.1
 
     # solver update damping, higher damping = more stability / slower convergence
-    solver_damping: 1000
+    solver_damping: 1000.0
 
     # number of gauss-newton iterations per sample per scan
     solver_iterations: 20
