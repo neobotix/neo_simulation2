@@ -362,9 +362,9 @@ recoveries_server:
     transform_timeout: 0.1
     use_sim_time: true
     simulate_ahead_time: 2.0
-    max_rotational_vel: 1.0
+    max_rotational_vel: 0.6
     min_rotational_vel: 0.4
-    rotational_acc_lim: 3.2
+    rotational_acc_lim: 0.8
 
 waypoint_follower:
   ros__parameters:
