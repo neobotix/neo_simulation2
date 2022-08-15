@@ -11,8 +11,8 @@ from launch_ros.actions import Node
 import os
 from pathlib import Path
 
-MY_NEO_ROBOT = os.environ['MY_ROBOT']
-MY_NEO_ENVIRONMENT = os.environ['MAP_NAME']
+MY_NEO_ROBOT = os.environ.get('MY_ROBOT', "mpo_700")
+MY_NEO_ENVIRONMENT = os.environ.get('MAP_NAME', "neo_workshop")
 
 def generate_launch_description():
     default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', MY_NEO_ENVIRONMENT + '.world')
