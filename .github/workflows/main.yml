@@ -27,13 +27,14 @@ jobs:
       - name: ROS 2 CI Action
         uses: ros-tooling/action-ros-ci@0.2.6
         with:
-          package-name: my_package
+          package-name: neo_simulation2
           target-ros2-distro: rolling
           skip-tests: true
         
       - uses: ros-tooling/setup-ros@0.3.4
         with:
           required-ros-distributions: rolling
+      - run:  "source /opt/ros/rolling/setup.bash && ros2 run --help"
       
 
 
