@@ -1,0 +1,2 @@
+- name: ROS 2 CI Action
+  uses: ros-tooling/action-ros-ci@0.2.6
