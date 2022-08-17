@@ -1,2 +1,11 @@
 - name: ROS 2 CI Action
   uses: ros-tooling/action-ros-ci@0.2.6
+
+steps:
+  - uses: ros-tooling/setup-ros@v0.3
+    with:
+      required-ros-distributions: rolling
+  - uses: ros-tooling/action-ros-ci@v0.2
+    with:
+      package-name: my_package
+      target-ros2-distro: rolling
