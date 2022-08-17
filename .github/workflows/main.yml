@@ -1,11 +1,40 @@
-- name: ROS 2 CI Action
-  uses: ros-tooling/action-ros-ci@0.2.6
+# This is a basic workflow to help you get started with Actions
 
-steps:
-  - uses: ros-tooling/setup-ros@v0.3
-    with:
-      required-ros-distributions: rolling
-  - uses: ros-tooling/action-ros-ci@v0.2
-    with:
-      package-name: my_package
-      target-ros2-distro: rolling
+name: neobotix-CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "rolling" branch
+  push:
+    branches: [ "rolling" ]
+  pull_request:
+    branches: [ "rolling" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      
+      - name: ROS 2 CI Action
+        uses: ros-tooling/action-ros-ci@v2.6
+        with:
+          package-name: my_package
+          target-ros2-distro: rolling
+          skip-tests: true
+        
+      - uses: ros-tooling/setup-ros@v0.3.4
+        with:
+          required-ros-distributions: rolling
+      
+
+
+
