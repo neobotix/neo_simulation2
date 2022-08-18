@@ -30,7 +30,9 @@ jobs:
       - uses: ros-tooling/action-ros-ci@0.2.6
         with:
           target-ros2-distro: rolling
-      
-
-
-
+          colcon-defaults: |
+            {
+              "build": {
+                "symlink-install": true
+              }
+            }
