@@ -24,19 +24,26 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      
-      - name: ROS 2 CI Action
-        uses: ros-tooling/action-ros-ci@0.2.6
+      - uses: ros-tooling/setup-ros@v0.3.4
         with:
-          package-name: neo_simulation2
+          use-ros2-testing: true
+      - uses: ros-tooling/action-ros-ci@v0.2.6
+        with:
           target-ros2-distro: rolling
-          skip-tests: true
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      
+#       - name: ROS 2 CI Action
+#         uses: ros-tooling/action-ros-ci@0.2.6
+#         with:
+#           package-name: neo_simulation2
+#           target-ros2-distro: rolling
+#           skip-tests: true
         
-      - uses: ros-tooling/setup-ros@0.3.4
-        with:
-          required-ros-distributions: rolling
-      - run:  "source /opt/ros/rolling/setup.bash && ros2 run --help"
+#       - uses: ros-tooling/setup-ros@0.3.4
+#         with:
+#           required-ros-distributions: rolling
+#       - run:  "source /opt/ros/rolling/setup.bash && ros2 run --help"
       
 
 
