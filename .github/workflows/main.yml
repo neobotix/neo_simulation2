@@ -26,24 +26,10 @@ jobs:
     steps:
       - uses: ros-tooling/setup-ros@0.3.4
         with:
-          use-ros2-testing: true
+          use-ros2-testing: false
       - uses: ros-tooling/action-ros-ci@0.2.6
         with:
           target-ros2-distro: rolling
-#     steps:
-#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      
-#       - name: ROS 2 CI Action
-#         uses: ros-tooling/action-ros-ci@0.2.6
-#         with:
-#           package-name: neo_simulation2
-#           target-ros2-distro: rolling
-#           skip-tests: true
-        
-#       - uses: ros-tooling/setup-ros@0.3.4
-#         with:
-#           required-ros-distributions: rolling
-#       - run:  "source /opt/ros/rolling/setup.bash && ros2 run --help"
       
 
 
