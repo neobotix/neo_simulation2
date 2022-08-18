@@ -24,10 +24,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: ros-tooling/setup-ros@v0.3.4
+      - uses: ros-tooling/setup-ros@0.3.4
         with:
           use-ros2-testing: true
-      - uses: ros-tooling/action-ros-ci@v0.2.6
+      - uses: ros-tooling/action-ros-ci@0.2.6
         with:
           target-ros2-distro: rolling
 #     steps:
