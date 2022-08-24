@@ -7,6 +7,8 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, Exec
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import ThisLaunchFileDir, LaunchConfiguration
 from launch_ros.actions import Node
+from launch.launch_context import LaunchContext
+from launch.utilities import perform_substitutions
 import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -24,10 +26,9 @@ def generate_launch_description():
         print("Warn: Having more than 5 robots is not a good idea - too much overhead")
         print("Therefore Let's spawn 5")
         MY_NO_ROBOTS = '5'
-        time.sleep(5)
+        time.sleep(5)   
 
     ld = LaunchDescription()
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     gazebo = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
@@ -37,7 +38,6 @@ def generate_launch_description():
                 'verbose': 'true',
             }.items()
         )
-
     ld.add_action(gazebo)
 
     for i in range(0, int(MY_NO_ROBOTS)):
@@ -46,12 +46,9 @@ def generate_launch_description():
                 os.path.join(get_package_share_directory('neo_simulation2'), 'launch', 'simulation.launch.py')
             ),
             launch_arguments={
-                'world': default_world_path,
-                'verbose': 'true',
                 'use_multi_robots': 'True',
-                'x': '0', 
                 'y': str((2.0 - int(i))),
-                'namespace_robot': "robot" + str(i) 
+                'namespace_robot': "robot" + str(i),
             }.items(),
         ))
 
