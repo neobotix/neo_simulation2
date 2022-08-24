@@ -37,7 +37,7 @@ def execution_stage(context: LaunchContext, namespace_val):
             '-x', x,
             '-y', y,
             '-z', z, 
-            '-topic', "/" + namespace + "/robot_description", 
+            '-topic', namespace + "/robot_description", 
             '-robot_namespace', namespace_robot],
         output = 'screen')
 
