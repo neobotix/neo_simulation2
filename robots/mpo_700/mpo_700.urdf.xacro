@@ -46,7 +46,7 @@
       </ros>
       <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
       <output_type>sensor_msgs/LaserScan</output_type>
-      <frame_name>lidar_1_link</frame_name>
+      <frame_name>$(arg robot_names)lidar_1_link</frame_name>
       </plugin>
     </sensor>
   </gazebo>
@@ -87,7 +87,7 @@
       </ros>
       <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
       <output_type>sensor_msgs/LaserScan</output_type>
-      <frame_name>lidar_2_link</frame_name>
+      <frame_name>$(arg robot_names)lidar_2_link</frame_name>
       </plugin>
     </sensor>
   </gazebo>

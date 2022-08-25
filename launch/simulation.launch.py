@@ -19,6 +19,13 @@ MY_NEO_ENVIRONMENT = os.environ.get('MAP_NAME', "neo_workshop")
 
 def execution_stage(context: LaunchContext, namespace_val):
     namespace = namespace_val.perform(context)
+    namespace_topic = ""
+    namespace_frame_prefix = ""
+
+    if (namespace != ""):
+        namespace_topic = "/" + namespace
+        namespace_frame_prefix = namespace + "/"
+
     use_sim_time = LaunchConfiguration('use_sim_time', default = 'true')
     namespace_robot = LaunchConfiguration('namespace_robot',  default="")
 
@@ -37,7 +44,7 @@ def execution_stage(context: LaunchContext, namespace_val):
             '-x', x,
             '-y', y,
             '-z', z, 
-            '-topic', namespace + "/robot_description", 
+            '-topic', namespace_topic + "/robot_description", 
             '-robot_namespace', namespace_robot],
         output = 'screen')
 
@@ -49,8 +56,8 @@ def execution_stage(context: LaunchContext, namespace_val):
         namespace=namespace_robot,
         parameters=[{'robot_description': Command([
             "xacro", " ", urdf, " ", 'robot_names:=',
-            namespace + "/"]),
-            'frame_prefix':namespace + "/"}],
+            namespace_frame_prefix]),
+            'frame_prefix': namespace_frame_prefix}],
         arguments=[urdf])
 
     teleop =  Node(
@@ -66,7 +73,7 @@ def execution_stage(context: LaunchContext, namespace_val):
         name='relay',
         output='screen',
         parameters=[{
-            'input_topic': namespace + "/tf",
+            'input_topic': namespace_topic + "/tf",
             'output_topic': "/tf", 
             'monitor_rate': 100.0}])
 
@@ -76,7 +83,7 @@ def execution_stage(context: LaunchContext, namespace_val):
         name='relay',
         output='screen',
         parameters=[{
-            'input_topic':  namespace + "/tf_static",
+            'input_topic': namespace_topic + "/tf_static",
             'output_topic': "/tf_static",
             'monitor_rate': 100.0}])
 

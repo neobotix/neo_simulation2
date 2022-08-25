@@ -48,7 +48,7 @@ def generate_launch_description():
             launch_arguments={
                 'use_multi_robots': 'True',
                 'y': str((2.0 - int(i))),
-                'namespace_robot': "/robot" + str(i),
+                'namespace_robot': "robot" + str(i),
             }.items(),
         ))
 
