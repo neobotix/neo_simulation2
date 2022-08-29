@@ -15,10 +15,6 @@ MY_NEO_ROBOT = os.environ.get('MY_ROBOT', "mpo_700")
 MY_NEO_ENVIRONMENT = os.environ.get('MAP_NAME', "neo_workshop")
 
 def generate_launch_description():
-    default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', MY_NEO_ENVIRONMENT + '.world')
-
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-
     robot_dir = LaunchConfiguration(
         'robot_dir',
         default=os.path.join(get_package_share_directory('neo_simulation2'),
@@ -32,29 +28,17 @@ def generate_launch_description():
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots/'+MY_NEO_ROBOT+'/', MY_NEO_ROBOT+'.urdf')
 
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', MY_NEO_ROBOT, '-file', urdf], output='screen')
-
-    start_robot_state_publisher_cmd = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
+    spawn_robot = Node(
+        package='ros_ign_gazebo',
+        executable='create',
+        name='spawn_model',
         output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[urdf])
+        arguments=['-file', urdf, '-name', "mpo_700"])
 
-    teleop =  Node(package='teleop_twist_keyboard',executable="teleop_twist_keyboard",
-    output='screen',
-    prefix = 'xterm -e',
-    name='teleop')
-
-    gazebo = IncludeLaunchDescription(
+    ignition = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
-            ),
-            launch_arguments={
-                'world': default_world_path,
-                'verbose': 'true',
-            }.items()
+                os.path.join(get_package_share_directory('ros_ign_gazebo'), 'launch', 'ign_gazebo.launch.py')
+            )
         )
 
-    return LaunchDescription([spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo])
+    return LaunchDescription([ignition, spawn_robot])
