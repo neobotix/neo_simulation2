@@ -6,7 +6,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import ThisLaunchFileDir, LaunchConfiguration
+from launch.substitutions import ThisLaunchFileDir, LaunchConfiguration, Command
 from launch_ros.actions import Node
 import os
 from pathlib import Path
@@ -30,7 +30,7 @@ def generate_launch_description():
         default_value='false',
         description='Use simulation (Gazebo) clock if true')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
-    urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots/'+MY_NEO_ROBOT+'/', MY_NEO_ROBOT+'.urdf')
+    urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots/'+MY_NEO_ROBOT+'/', MY_NEO_ROBOT+'.urdf.xacro')
 
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',arguments=['-entity', MY_NEO_ROBOT, '-file', urdf], output='screen')
 
@@ -39,7 +39,9 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
+        parameters=[{'use_sim_time': use_sim_time, 'robot_description': Command([
+            "xacro", " ", urdf, " ", 'include_arm:=',
+            "yes"])}],
         arguments=[urdf])
 
     teleop =  Node(package='teleop_twist_keyboard',executable="teleop_twist_keyboard",
@@ -56,5 +58,17 @@ def generate_launch_description():
                 'verbose': 'true',
             }.items()
         )
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        parameters=[{'use_sim_time': use_sim_time}],
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    )
 
-    return LaunchDescription([spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo])
+    initial_joint_controller_spawner_stopped = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["arm_controller", "-c", "/controller_manager"],
+    )
+
+    return LaunchDescription([spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo, initial_joint_controller_spawner_stopped, joint_state_broadcaster_spawner])

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="cabinet" params="name parent *origin">
+   <joint name="${name}_joint" type="fixed">
+   <xacro:insert_block name="origin" />
+    <joint_properties damping="1" friction="1" />
+    <parent link="${parent}" />
+    <child link="${name}_link" />
+   </joint>
+
+    <link name="${name}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 -1.5708" />
+        <geometry>
+            <mesh filename="package://neo_simulation2/components/arms/cabinet.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 -1.5708" />
+        <geometry>
+            <mesh filename="package://neo_simulation2/components/arms/cabinet.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+    </link>
+
+  </xacro:macro>
+  
+</robot>
