@@ -190,6 +190,7 @@ controller_server:
     controller_plugin_types: ["neo_local_planner::NeoLocalPlanner"]
     goal_checker_plugins: ["general_goal_checker"]
     progress_checker_plugin: "progress_checker"
+    use_sim_time: True
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.5
@@ -267,7 +268,6 @@ local_costmap:
       robot_base_frame: base_footprint
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
-      use_sim_time: True
       rolling_window: true
       width: 5
       height: 5
@@ -288,13 +288,16 @@ local_costmap:
           clearing: True
           marking: True
           data_type: "LaserScan"
+          sensor_frame: "lidar_1_link"
         scan1:
           topic: /scan2
           max_obstacle_height: 2.0
           clearing: True
           marking: True
           data_type: "LaserScan"
+          sensor_frame: "lidar_2_link"
       always_send_full_costmap: True
+
 
 global_costmap:
   global_costmap:

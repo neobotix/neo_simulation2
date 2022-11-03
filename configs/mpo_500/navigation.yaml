@@ -181,7 +181,7 @@ bt_navigator_rclcpp_node:
 controller_server:
   ros__parameters:
     # controller server parameters (see Controller Server for more info)
-    use_sim_time: False
+    use_sim_time: True
     controller_frequency: 100.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -267,10 +267,6 @@ controller_server:
       differential_drive : false
       # Enable or disable reversing
       allow_reversing: false
-
-controller_server_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
 
 local_costmap:
   local_costmap:
