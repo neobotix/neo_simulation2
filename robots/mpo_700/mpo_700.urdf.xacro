@@ -805,7 +805,7 @@
 
     <gazebo>
         <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-           <parameters> /home/youknowwho/neobotix_workspace/src/elite_description/config/joint_names_ec66_description.yaml </parameters>
+           <parameters> $(find neo_simulation2)/configs/arms/joint_names_ec66_description.yaml </parameters>
         </plugin>
     </gazebo>
 
