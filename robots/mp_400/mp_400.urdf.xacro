@@ -4,8 +4,10 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <!-- Materials -->
-<robot name="mp_400">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mp_400">
   <!-- Lidar sensor -->
+<xacro:arg name="robot_names" default=""/>
+
 <gazebo>
 
 <!-- Use gazebo_ros_joint_state_publisher instead of publishWheelJointState -->
@@ -27,9 +29,9 @@
         <publish_wheel_tf>true</publish_wheel_tf>
         <command_topic>cmd_vel</command_topic>
 
-        <odometry_topic>odom</odometry_topic>
-        <odometry_frame>odom</odometry_frame>
-        <robot_base_frame>base_footprint</robot_base_frame>
+        <odometry_topic>$(arg robot_names)odom</odometry_topic>
+        <odometry_frame>$(arg robot_names)odom</odometry_frame>
+        <robot_base_frame>$(arg robot_names)base_footprint</robot_base_frame>
 
         <!-- wheelTorque and wheelAcceleration now have max_ prefix -->
         <max_wheel_torque>1000</max_wheel_torque>
@@ -75,7 +77,7 @@
       </ros>
       <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
       <output_type>sensor_msgs/LaserScan</output_type>
-      <frame_name>lidar_1_link</frame_name>
+      <frame_name>$(arg robot_names)lidar_1_link</frame_name>
       </plugin>
     </sensor>
   </gazebo>
