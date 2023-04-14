@@ -185,8 +185,8 @@ bt_navigator_navigate_to_pose_rclcpp_node:
 controller_server:
   ros__parameters:
     # controller server parameters (see Controller Server for more info)
-    use_sim_time: True
-    controller_frequency: 50.0
+    use_sim_time: False
+    controller_frequency: 100.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
@@ -202,53 +202,75 @@ controller_server:
       xy_goal_tolerance: 0.05
       yaw_goal_tolerance: 0.05
       stateful: True
-    # RegulatedPurePursuitController Parameters
+    # neo_local_planner controller parameters
     FollowPath:
-      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.5
-      max_linear_accel: 0.4
-      max_linear_decel: 0.4
-      lookahead_dist: 0.6
-      min_lookahead_dist: 0.3 #0.3
-      max_lookahead_dist: 0.9 #0.9
-      lookahead_time: 1.5 #1.5
-      rotate_to_heading_angular_vel: 0.6
-      transform_tolerance: 0.1
-      use_velocity_scaled_lookahead_dist: false
-      min_approach_linear_velocity: 0.01
-      use_approach_linear_velocity_scaling: true
-      max_allowed_time_to_collision: 1.0
-      use_regulated_linear_velocity_scaling: true
-      use_cost_regulated_linear_velocity_scaling: false
-      regulated_linear_scaling_min_radius:  0.9
-      regulated_linear_scaling_min_speed: 0.25
-      use_rotate_to_heading: true
-      rotate_to_heading_min_angle: 0.785
-      max_angular_accel: 0.6
+      plugin: "neo_local_planner::NeoLocalPlanner"
+      # The x acceleration limit of the robot in meters/sec^2
+      acc_lim_x : 0.25
+      # The y acceleration limit of the robot in meters/sec^2
+      acc_lim_y : 0.25
+      # The rotational acceleration limit of the robot in radians/sec^2
+      acc_lim_theta : 1.0
+      # The maximum x velocity for the robot in m/s.
+      max_vel_x : 0.6
+      # The minimum x velocity for the robot in m/s, negative for backwards motion.
+      min_vel_x : -0.2
+      # The maximum y velocity for the robot in m/s
+      max_vel_y : 0.5
+      # The minimum y velocity for the robot in m/s
+      min_vel_y : -0.5
+      # The absolute value of the maximum rotational velocity for the robot in rad/s
+      max_rot_vel : 0.8
+      # The absolute value of the minimum rotational velocity for the robot in rad/s
+      min_rot_vel : 0.1
+      # The absolute value of the maximum translational velocity for the robot in m/s
+      max_trans_vel : 0.6
+      # The absolute value of the minimum translational velocity for the robot in m/s
+      min_trans_vel : 0.1
+      # The tolerance in radians for the controller in yaw/rotation when achieving its goal
+      yaw_goal_tolerance : 0.005
+      # The tolerance in meters for the controller in the x & y distance when achieving a goal
+      xy_goal_tolerance : 0.01
+      # How long to fine tune for goal position after reaching tolerance limits [s]
+      goal_tune_time : 2.0
+      # How far to predict control pose into the future based on latest odometry [s]
+      lookahead_time : 0.4
+      # How far to look ahead when computing path orientation [m]
+      lookahead_dist : 0.5
+      # Threshold yaw error below which we consider to start moving [rad]
+      start_yaw_error : 0.5
+      # Gain when adjusting final x position for goal [1/s]
+      pos_x_gain : 1.0
+       # Gain when adjusting y position (holonomic only) [1/s]
+      pos_y_gain : 1.0
+      # Gain for adjusting yaw when not translating, or in case of holonomic drive  [1/s]
+      static_yaw_gain : 3.0
+      # Gain for x cost avoidance (holonomic only)
+      cost_x_gain : 0.2
+      # Gain for y cost avoidance (holonomic only)
+      cost_y_gain : 0.2
+      # How far ahead to compute y cost gradient (constant offset) [m]
+      cost_y_lookahead_dist : 0.0
+      # How far ahead to compute y cost gradient (dynamic offset) [s]
+      cost_y_lookahead_time : 2.0
+      # Gain for yaw cost avoidance
+      cost_yaw_gain : 2.0
+      # Gain for final control low pass filter
+      low_pass_gain : 0.2
+      # Max cost to allow, above we slow down to min_trans_vel or even stop
+      max_cost : 0.95
+      # Max velocity based on curvature [rad/s]
+      max_curve_vel : 0.3
+      # Max distance to goal when looking for it [m]
+      max_goal_dist : 0.5
+      # Max distance allowable for backing up (zero = unlimited) [m]
+      max_backup_dist : 0.0
+      # Minimal distance for stopping [m]
+      min_stop_dist : 0.6
+      # If robot has differential drive, holonomic otherwise
+      differential_drive : false
+      # Enable or disable reversing
       allow_reversing: false
-
-      # plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      # desired_linear_vel: 0.5
-      # max_linear_accel: 0.8
-      # max_linear_decel: 0.8
-      # lookahead_dist: 0.6
-      # min_lookahead_dist: 0.3 #0.3
-      # max_lookahead_dist: 0.9 #0.9
-      # lookahead_time: 1.5 #1.5
-      # rotate_to_heading_angular_vel: 0.9
-      # transform_tolerance: 0.1
-      # use_velocity_scaled_lookahead_dist: false
-      # min_approach_linear_velocity: 0.01
-      # use_approach_linear_velocity_scaling: true
-      # max_allowed_time_to_collision: 1.0
-      # use_regulated_linear_velocity_scaling: true
-      # use_cost_regulated_linear_velocity_scaling: false
-      # regulated_linear_scaling_min_radius:  0.9
-      # regulated_linear_scaling_min_speed: 0.25
-      # use_rotate_to_heading: false
-      # rotate_to_heading_min_angle: 0.785
-      # max_angular_accel: 1.0
-      # allow_reversing: true
 
 local_costmap:
   local_costmap:
