@@ -36,10 +36,11 @@ def execution_stage(context: LaunchContext):
         get_package_share_directory('neo_simulation2'),
         'robots/'+MY_NEO_ROBOT+'/', MY_NEO_ROBOT+'.urdf.xacro')
     
-    # ToDo add an launch argument for include_arm
+    # ToDo add an launch argument for arm
+    arm = "ur10" # elite or "ur10"
     xacro_file = Command([
-            "xacro", " ", urdf, " ", 'include_arm:=',
-            "true"])
+            "xacro", " ", urdf, " ", arm, ':=',
+            "true", " "])
 
     doc = xacro.parse(xacro_file.perform(context)) 
     xacro.process_doc(doc) 
@@ -85,7 +86,12 @@ def execution_stage(context: LaunchContext):
         arguments=["arm_controller", "-c", "/controller_manager"],
     )
 
-    return [spawn_entity, start_robot_state_publisher_cmd, teleop, gazebo, initial_joint_controller_spawner_stopped, joint_state_broadcaster_spawner]
+    return [spawn_entity,
+        start_robot_state_publisher_cmd,
+        teleop, 
+        gazebo,
+        initial_joint_controller_spawner_stopped,
+        joint_state_broadcaster_spawner]
 
 
 def generate_launch_description():
