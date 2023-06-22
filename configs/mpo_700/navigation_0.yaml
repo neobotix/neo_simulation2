@@ -1,7 +1,7 @@
 neo_localization2_node:
   ros__parameters:
-    base_frame: "/base_footprint"
-    odom_frame: "/odom"
+    base_frame: "base_footprint"
+    odom_frame: "odom"
     # exponential low pass gain for localization update (0 to 1)
     #   (higher gain means odometry is less used / relied on)
     update_gain: 0.5
@@ -123,7 +123,7 @@ bt_navigator:
   ros__parameters:
     use_sim_time: True
     global_frame: map
-    robot_base_frame: robot0/base_link
+    robot_base_frame: robot0base_link
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
@@ -263,8 +263,8 @@ local_costmap:
     ros__parameters:
       update_frequency: 10.0
       publish_frequency: 1.0
-      global_frame: robot0/odom
-      robot_base_frame: robot0/base_link
+      global_frame: robot0odom
+      robot_base_frame: robot0base_link
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
       use_sim_time: True
@@ -302,7 +302,7 @@ global_costmap:
       update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: robot0/base_link
+      robot_base_frame: robot0base_link
       footprint_padding: 0.
       footprint:  "[ [0.45,0.4],[-0.45,0.4],[-0.45,-0.4],[0.45,-0.4] ]"
       use_sim_time: True
@@ -371,8 +371,8 @@ behavior_server:
       plugin: "nav2_behaviors/BackUp"
     wait:
       plugin: "nav2_behaviors/Wait"
-    global_frame: robot0/odom
-    robot_base_frame: robot0/base_link
+    global_frame: robot0odom
+    robot_base_frame: robot0base_link
     transform_timeout: 0.1
     use_sim_time: true
     simulate_ahead_time: 2.0
