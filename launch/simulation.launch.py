@@ -15,6 +15,7 @@ MY_NEO_ROBOT = os.environ.get('MY_ROBOT', "mpo_700")
 
 def generate_launch_description():
     default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', 'example.sdf')
+    bridge_config_file = os.path.join(get_package_share_directory('neo_simulation2'), 'configs/gz_bridge', 'gz_bridge_config.yaml')
     robot_dir = LaunchConfiguration(
         'robot_dir',
         default=os.path.join(get_package_share_directory('neo_simulation2'),
@@ -41,4 +42,11 @@ def generate_launch_description():
             ), launch_arguments={'ign_args': [default_world_path]}.items()
         )
 
-    return LaunchDescription([ignition, spawn_robot])
+    gz_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='parameter_bridge',
+        output='screen',
+        parameters=[{'config_file': bridge_config_file}])
+
+    return LaunchDescription([ignition, spawn_robot, gz_bridge])

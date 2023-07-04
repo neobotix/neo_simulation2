@@ -1,0 +1,42 @@
+ # Set just topic name, applies to both
+# - topic_name: "chatter"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "ignition.msgs.StringMsg"
+
+# Set just ROS topic name, applies to both
+# - ros_topic_name: "cmd_vel"
+#   ros_type_name: "geometry_msgs::msg::Twist"
+#   gz_type_name: "ignition.msgs.StringMsg"
+
+# Set just GZ topic name, applies to both
+# - gz_topic_name: "chatter_ign"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "ignition.msgs.StringMsg"
+
+# Set each topic name explicitly
+- ros_topic_name: "/cmd_vel"
+  gz_topic_name: "/model/mpo_700/cmd_vel"
+  ros_type_name: "geometry_msgs::msg::Twist"
+  gz_type_name: "ignition.msgs.Twist"
+  direction: "ROS_TO_GZ" 
+
+# Full set of configurations
+- ros_topic_name: "/clock"
+  gz_topic_name: "clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  direction: "GZ_TO_ROS"  # Default "BIDIRECTIONAL" - Bridge both directions
+                            # "GZ_TO_ROS" - Bridge Ignition topic to ROS
+                            # "ROS_TO_GZ" - Bridge ROS topic to Ignition
+
+# Full set of configurations
+# - ros_topic_name: "ros_chatter"
+#   gz_topic_name: "ign_chatter"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "ignition.msgs.StringMsg"
+#   subscriber_queue: 5       # Default 10
+#   publisher_queue: 6        # Default 10
+#   lazy: true                # Default "false"
+#   direction: BIDIRECTIONAL  # Default "BIDIRECTIONAL" - Bridge both directions
+#                             # "GZ_TO_ROS" - Bridge Ignition topic to ROS
+#                             # "ROS_TO_GZ" - Bridge ROS topic to Ignition
