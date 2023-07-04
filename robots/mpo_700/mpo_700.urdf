@@ -4,6 +4,80 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="mpo_700">
+  <gazebo reference="lidar_1_link">
+    <sensor name="lidar_1_sensor" type="gpu_lidar">
+      <always_on>true</always_on>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.48</min_angle>
+            <max_angle>1.48</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.05</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+                   achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+                   stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+                   reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <topic>scan</topic>
+      <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
+      <output_type>sensor_msgs/LaserScan</output_type>
+      <ignition_frame_id>lidar_1_link</ignition_frame_id>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="lidar_2_link">
+    <sensor name="lidar_2_sensor" type="gpu_lidar">
+      <always_on>true</always_on>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.48</min_angle>
+            <max_angle>1.48</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>30.0</max>
+          <resolution>0.05</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+                   achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+                   stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+                   reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <topic>scan2</topic>
+      <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
+      <output_type>sensor_msgs/LaserScan</output_type>
+      <ignition_frame_id>lidar_2_link</ignition_frame_id>
+    </sensor>
+  </gazebo>
+
   <link name="base_footprint"/>
   <joint name="base_footprint_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -300,6 +374,9 @@
       <plugin filename="ignition-gazebo-velocity-control-system"
         name="ignition::gazebo::systems::VelocityControl">
       </plugin>
+      <plugin filename="ignition-gazebo-sensors-system"
+        name="ignition::gazebo::systems::Sensors">
+    </plugin>
     </gazebo>
 
 </robot>
