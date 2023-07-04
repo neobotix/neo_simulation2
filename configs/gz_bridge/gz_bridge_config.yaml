@@ -13,6 +13,19 @@
 #   ros_type_name: "std_msgs/msg/String"
 #   gz_type_name: "ignition.msgs.StringMsg"
 
+# Scanners
+- ros_topic_name: "/scan"
+  gz_topic_name: "/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "ignition.msgs.LaserScan"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "/scan2"
+  gz_topic_name: "/scan2"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "ignition.msgs.LaserScan"
+  direction: "GZ_TO_ROS"
+
 # Set each topic name explicitly
 - ros_topic_name: "/cmd_vel"
   gz_topic_name: "/model/mpo_700/cmd_vel"
