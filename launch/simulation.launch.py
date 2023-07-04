@@ -29,7 +29,7 @@ def generate_launch_description():
     urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots/'+MY_NEO_ROBOT+'/', MY_NEO_ROBOT+'.urdf')
 
     spawn_robot = Node(
-        package='ros_ign_gazebo',
+        package='ros_gz_sim',
         executable='create',
         name='spawn_model',
         output='screen',
@@ -37,7 +37,7 @@ def generate_launch_description():
 
     ignition = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('ros_ign_gazebo'), 'launch', 'ign_gazebo.launch.py')
+                os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
             )
         )
 
