@@ -370,13 +370,23 @@
     <gazebo>
       <plugin filename="ignition-gazebo-odometry-publisher-system"
         name="ignition::gazebo::systems::OdometryPublisher">
+        <!-- Default from gz-sim was set to /model/mpo_700/topic and /mpo_700/frame on July 2023 -->
+        <odom_frame>odom</odom_frame> 
+        <odom_covariance_topic>odom</odom_covariance_topic>
+        <tf_topic>tf</tf_topic>
+        <robot_base_frame>base_footprint</robot_base_frame>
+        <odom_publish_frequency>100</odom_publish_frequency>
       </plugin>
+
       <plugin filename="ignition-gazebo-velocity-control-system"
         name="ignition::gazebo::systems::VelocityControl">
+        <topic>cmd_vel</topic>
       </plugin>
+
       <plugin filename="ignition-gazebo-sensors-system"
         name="ignition::gazebo::systems::Sensors">
-    </plugin>
+      </plugin>
+
     </gazebo>
 
 </robot>

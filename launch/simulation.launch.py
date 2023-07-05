@@ -42,7 +42,7 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
-        parameters=[{'use_sim_time': use_sim_time,'frame_prefix': "mpo_700/"}],
+        parameters=[{'use_sim_time': use_sim_time}],
         arguments=[urdf])
 
     ignition = IncludeLaunchDescription(
