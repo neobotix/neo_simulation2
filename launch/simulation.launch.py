@@ -16,6 +16,7 @@ MY_NEO_ROBOT = os.environ.get('MY_ROBOT', "mpo_700")
 def generate_launch_description():
     default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', 'example.sdf')
     bridge_config_file = os.path.join(get_package_share_directory('neo_simulation2'), 'configs/gz_bridge', 'gz_bridge_config.yaml')
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     robot_dir = LaunchConfiguration(
         'robot_dir',
         default=os.path.join(get_package_share_directory('neo_simulation2'),
@@ -36,6 +37,14 @@ def generate_launch_description():
         output='screen',
         arguments=['-file', urdf, '-name', "mpo_700"])
 
+    start_robot_state_publisher_cmd = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time,'frame_prefix': "mpo_700/"}],
+        arguments=[urdf])
+
     ignition = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
@@ -49,4 +58,11 @@ def generate_launch_description():
         output='screen',
         parameters=[{'config_file': bridge_config_file}])
 
-    return LaunchDescription([ignition, spawn_robot, gz_bridge])
+    tf_odom = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='parameter_bridge',
+        output='screen',
+        parameters=[{'config_file': bridge_config_file}])
+
+    return LaunchDescription([ignition, spawn_robot, gz_bridge, start_robot_state_publisher_cmd, tf_odom])

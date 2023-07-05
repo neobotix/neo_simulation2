@@ -13,6 +13,20 @@
 #   ros_type_name: "std_msgs/msg/String"
 #   gz_type_name: "ignition.msgs.StringMsg"
 
+# Odom
+- ros_topic_name: "/odom"
+  gz_topic_name: "/model/mpo_700/odometry_with_covariance"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.OdometryWithCovariance"
+  direction: "GZ_TO_ROS"
+
+#tf
+- ros_topic_name: "/tf"
+  gz_topic_name: "/model/mpo_700/pose"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "ignition.msgs.Pose_V"
+  direction: "GZ_TO_ROS"
+
 # Scanners
 - ros_topic_name: "/scan"
   gz_topic_name: "/scan"
