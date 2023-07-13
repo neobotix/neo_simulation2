@@ -1,7 +1,7 @@
 neo_localization2_node:
   ros__parameters:
-    base_frame: "base_footprint"
-    odom_frame: "odom"
+    base_frame: "/base_footprint"
+    odom_frame: "/odom"
     # exponential low pass gain for localization update (0 to 1)
     #   (higher gain means odometry is less used / relied on)
     update_gain: 0.5
@@ -26,7 +26,7 @@ neo_localization2_node:
     #    how fast to increase particle spread when in 1D / 0D mode
     odometry_std_xy: 0.01
     # odometry error in yaw angle [rad/rad] [1]
-    #    how fast to increase particle spread when in 0D mode
+    #  how fast to increase particle spread when in 0D mode
     odometry_std_yaw: 0.01
     # minimum particle spread in x and y [m]
     min_sample_std_xy: 0.025
@@ -37,9 +37,9 @@ neo_localization2_node:
     # initial/maximum particle spread in yaw angle [rad]
     max_sample_std_yaw: 0.5
     # threshold for 1D / 2D decision making (minimum average second order gradient)
-    #   if worst gradient direction is below this value we go into 1D mode
-    #   if both gradient directions are below we may go into 0D mode, depending on disable_threshold
-    #   higher values will make it go into 1D / 0D mode earlier
+    # if worst gradient direction is below this value we go into 1D mode
+    # if both gradient directions are below we may go into 0D mode, depending on disable_threshold
+    # higher values will make it go into 1D / 0D mode earlier
     constrain_threshold: 0.1
     # threshold for 1D / 2D decision making (with or without orientation)
     #   higher values will make it go into 1D mode earlier
@@ -56,8 +56,8 @@ neo_localization2_node:
     transform_timeout: 0.2
     # if to broadcast map frame
     broadcast_tf: true
-    # Scan topic
-    scan_topic: scan
+    # Scan topic - feel free to use topic /scan if you have 2 laser scanners
+    scan_topic: "scan"
     # Initial Pose topic
     initialpose: initialpose
     # Map Tile topic
@@ -68,16 +68,14 @@ neo_localization2_node:
     particle_cloud: particlecloud
     # amcl_pose topic
     amcl_pose: amcl_pose
-    map_topic: "/map"
 
 amcl:
   ros__parameters:
-    use_sim_time: True
-    alpha1: 0.001
-    alpha2: 0.001
-    alpha3: 0.001
-    alpha4: 0.001
-    alpha5: 0.001
+    alpha1: 0.002
+    alpha2: 0.002
+    alpha3: 0.002
+    alpha4: 0.002
+    alpha5: 0.002
     base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
@@ -85,48 +83,41 @@ amcl:
     do_beamskip: false
     global_frame_id: "map"
     lambda_short: 0.1
-    set_initial_pose: true
+    set_initial_pose: false
     laser_likelihood_max_dist: 2.0
-    laser_max_range: -1.44
-    laser_min_range: 1.44
+    laser_max_range: -1.0
+    laser_min_range: -1.0
     laser_model_type: "likelihood_field"
-    max_beams: 200
-    max_particles: 2000
+    max_beams: 500
+    max_particles: 1250
     min_particles: 500
     odom_frame_id: "odom"
     pf_err: 0.05
-    pf_z: 0.99
+    pf_z: 0.01
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
     resample_interval: 2
-    robot_model_type: "differential"
+    robot_model_type: "omnidirectional"
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
     transform_tolerance: 0.1
-    scan_topic: /scan
+    scan_topic: /lidar_1/scan_filtered
     update_min_a: 0.1
     update_min_d: 0.1
     # z_hit: 0.5
     # z_max: 0.05
     # z_rand: 0.5
-    # z_short: 0.05
-
-amcl_map_client:
-  ros__parameters:
-    use_sim_time: True
-
-amcl_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
 
 bt_navigator:
   ros__parameters:
-    use_sim_time: True
     global_frame: map
-    robot_base_frame: robot1base_link
+    robot_base_frame: robot1/base_link
+    odom_topic: /robot1/odom
     bt_loop_duration: 10
     default_server_timeout: 20
+    groot_zmq_publisher_port: 1666
+    groot_zmq_server_port: 1667
     plugin_lib_names:
       - nav2_compute_path_to_pose_action_bt_node
       - nav2_compute_path_through_poses_action_bt_node
@@ -134,7 +125,6 @@ bt_navigator:
       - nav2_follow_path_action_bt_node
       - nav2_spin_action_bt_node
       - nav2_wait_action_bt_node
-      - nav2_assisted_teleop_action_bt_node
       - nav2_back_up_action_bt_node
       - nav2_drive_on_heading_bt_node
       - nav2_clear_costmap_service_bt_node
@@ -159,7 +149,6 @@ bt_navigator:
       - nav2_path_expiring_timer_condition
       - nav2_distance_traveled_condition_bt_node
       - nav2_single_trigger_bt_node
-      - nav2_goal_updated_controller_bt_node
       - nav2_is_battery_low_condition_bt_node
       - nav2_navigate_through_poses_action_bt_node
       - nav2_navigate_to_pose_action_bt_node
@@ -172,16 +161,11 @@ bt_navigator:
       - nav2_wait_cancel_bt_node
       - nav2_spin_cancel_bt_node
       - nav2_back_up_cancel_bt_node
-      - nav2_assisted_teleop_cancel_bt_node
       - nav2_drive_on_heading_cancel_bt_node
-    error_code_names:
-      - compute_path_error_code
-      - follow_path_error_code
 
 controller_server:
   ros__parameters:
     # controller server parameters (see Controller Server for more info)
-    use_sim_time: False
     controller_frequency: 100.0
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -189,7 +173,6 @@ controller_server:
     controller_plugins: ["FollowPath"]
     goal_checker_plugins: ["general_goal_checker"]
     progress_checker_plugin: "progress_checker"
-    odom_topic: "/robot1/odom"
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.5
@@ -220,7 +203,7 @@ controller_server:
       # The absolute value of the minimum translational velocity for the robot in m/s
       min_trans_vel : 0.1
       # The tolerance in radians for the controller in yaw/rotation when achieving its goal
-      yaw_goal_tolerance : 0.01
+      yaw_goal_tolerance : 0.05
       # The tolerance in meters for the controller in the x & y distance when achieving a goal
       xy_goal_tolerance : 0.1
       # How long to fine tune for goal position after reaching tolerance limits [s]
@@ -261,23 +244,27 @@ controller_server:
       min_stop_dist : 0.3
       # If robot has differential drive, holonomic otherwise
       differential_drive : true
-      odom_topic: /robot1/odom
+      # odom frame_id
+      local_frame: "/odom"
+      # base frame_id
+      base_frame: "/base_link"
+      # odom topic
+      odom_topic: "odom"
 
 local_costmap:
   local_costmap:
     ros__parameters:
       update_frequency: 10.0
       publish_frequency: 1.0
-      global_frame: robot1odom
-      robot_base_frame: robot1base_link
+      use_sim_time: true
+      global_frame: robot1/odom
+      robot_base_frame: robot1/base_link
       footprint_padding: 0.
       footprint:  "[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.3],[0.30,-0.3] ]"
-      use_sim_time: True
       rolling_window: true
-      map_topic: "/map"
       width: 5
       height: 5
-      resolution: 0.02
+      resolution: 0.03
       # robot_radius: 0.22
       plugins: ["obstacle_layer", "inflation_layer"]
       inflation_layer:
@@ -290,11 +277,7 @@ local_costmap:
         observation_sources: scan
         scan:
           topic: /robot1/scan
-          obstacle_max_range: 5.0
           max_obstacle_height: 2.0
-          obstacle_min_range: 0.0
-          raytrace_max_range: 8.0
-          raytrace_min_range: 0.0
           clearing: True
           marking: True
           data_type: "LaserScan"
@@ -303,14 +286,14 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
+      update_frequency: 0.4
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: robot1base_link
+      robot_base_frame: robot1/base_link
+      map_topic: /map
       footprint_padding: 0.0
       footprint:  "[ [0.30,0.30],[-0.30,0.30],[-0.30,-0.3],[0.30,-0.3] ]"
-      use_sim_time: True
-      map_topic: "/map"
+      # robot_radius: 0.22
       resolution: 0.05
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -320,7 +303,6 @@ global_costmap:
         scan:
           topic: /robot1/scan
           obstacle_max_range: 5.0
-          max_obstacle_height: 2.0
           obstacle_min_range: 0.0
           raytrace_max_range: 8.0
           raytrace_min_range: 0.0
@@ -339,12 +321,10 @@ global_costmap:
 
 map_server:
   ros__parameters:
-    use_sim_time: True
-    yaml_filename: "neo_track1.yaml"
+    yaml_filename: "test.yaml"
 
 map_saver:
   ros__parameters:
-    use_sim_time: True
     save_map_timeout: 5000
     free_thresh_default: 0.25
     occupied_thresh_default: 0.65
@@ -352,18 +332,13 @@ map_saver:
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 20.0
-    use_sim_time: True
+    expected_planner_frequency: 5.0
     planner_plugins: ["GridBased"]
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 0.5
       use_astar: false
       allow_unknown: true
-
-planner_server_rclcpp_node:
-  ros__parameters:
-    use_sim_time: True
 
 behavior_server:
   ros__parameters:
@@ -377,10 +352,9 @@ behavior_server:
       plugin: "nav2_behaviors/BackUp"
     wait:
       plugin: "nav2_behaviors/Wait"
-    global_frame: robot1odom
-    robot_base_frame: robot1base_link
+    global_frame: robot1/odom
+    robot_base_frame: robot1/base_link
     transform_timeout: 0.1
-    use_sim_time: true
     simulate_ahead_time: 2.0
     max_rotational_vel: 0.5
     min_rotational_vel: 0.3

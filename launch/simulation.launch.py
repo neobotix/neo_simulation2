@@ -24,7 +24,7 @@ def execution_stage(context: LaunchContext, namespace_val):
 
     if (namespace != ""):
         namespace_topic = "/" + namespace
-        namespace_frame_prefix = namespace
+        namespace_frame_prefix = namespace + "/"
 
     use_sim_time = LaunchConfiguration('use_sim_time', default = 'true')
     namespace_robot = LaunchConfiguration('namespace_robot',  default="")
