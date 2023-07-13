@@ -38,6 +38,10 @@ def generate_launch_description():
     nav2_launch_file_dir = os.path.join(get_package_share_directory('neo_nav2_bringup'), 'launch')
 
     return LaunchDescription([
+        GroupAction([
+        PushRosNamespace(
+            condition=IfCondition(use_multi_robots),
+            namespace=namespace),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_neo.launch.py']),
             condition=IfCondition(PythonExpression(['not ', use_amcl])),
@@ -65,3 +69,4 @@ def generate_launch_description():
                               'use_sim_time': use_sim_time,
                               'params_file': param_dir}.items()),
         ])
+    ])
