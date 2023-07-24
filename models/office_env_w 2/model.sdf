@@ -11,12 +11,10 @@
             <size>5.733 0.15 2.5</size>
           </box>
         </geometry>
-        	<material>
-          <script>
-            <uri>model://office_env_w/materials/scripts</uri>
-            <uri>model://office_env_w/materials/textures</uri>
-            <name>wall_white</name>
-          </script>
+        <material>
+	  <ambient>0.2 0.2 0.2 1</ambient>
+	  <diffuse>1.0 1.0 1.0 1</diffuse>
+	  <specular>1.0 1.0 1.0 1</specular>
         </material>
         <meta>
           <layer>0</layer>

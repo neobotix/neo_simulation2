@@ -14,7 +14,7 @@ from pathlib import Path
 MY_NEO_ROBOT = os.environ.get('MY_ROBOT', "mpo_700")
 
 def generate_launch_description():
-    default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', 'example.sdf')
+    default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', 'neo_workshop.sdf')
     bridge_config_file = os.path.join(get_package_share_directory('neo_simulation2'), 'configs/gz_bridge', 'gz_bridge_config.yaml')
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     robot_dir = LaunchConfiguration(
