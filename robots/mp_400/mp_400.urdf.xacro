@@ -106,10 +106,10 @@
       </geometry>
     </visual>
     <collision name="body_collision">
-      <origin rpy="0 0 1.57" xyz="0.0 0.0 0.0"/>
+      <origin rpy="0 0 1.57" xyz="0.0 0.0 0.1905"/>
       <geometry>
-        <mesh filename="package://neo_simulation2/robots/mp_400/meshes/MP-400-BODY.dae" scale="0.001 0.001 0.001"/>
-        <!--cylinder length="0.381" radius="0.2545"/-->
+        <!-- <mesh filename="package://neo_simulation2/robots/mp_400/meshes/MP-400-BODY.dae" scale="0.001 0.001 0.001"/> -->
+        <cylinder length="0.381" radius="0.2545"/>
       </geometry>
     </collision>
   </link>
@@ -141,12 +141,12 @@
         <mesh filename="package://neo_simulation2/robots/mp_400/meshes/MP-400-CASTER-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin rpy="0 0 0" xyz="0 0. 0"/>
       <geometry>
         <sphere radius="0.038"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <gazebo reference="mp_400_caster_wheel_front_left_link">
     <kp>10000.0</kp>
@@ -177,12 +177,12 @@
         <mesh filename="package://neo_simulation2/robots/mp_400/meshes/MP-400-CASTER-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin rpy="0 0 0" xyz="0 0. 0"/>
       <geometry>
         <sphere radius="0.038"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <gazebo reference="mp_400_caster_wheel_back_left_link">
     <kp>10000.0</kp>
@@ -213,12 +213,12 @@
         <mesh filename="package://neo_simulation2/robots/mp_400/meshes/MP-400-CASTER-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin rpy="0 0 0" xyz="0 0. 0"/>
       <geometry>
         <sphere radius="0.038"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <gazebo reference="mp_400_caster_wheel_front_right_link">
     <kp>10000.0</kp>
@@ -249,12 +249,12 @@
         <mesh filename="package://neo_simulation2/robots/mp_400/meshes/MP-400-CASTER-WHEEL.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin rpy="0 0 0" xyz="0 0. 0"/>
       <geometry>
         <sphere radius="0.038"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <gazebo reference="mp_400_caster_wheel_back_right_link">
     <kp>10000.0</kp>
@@ -355,12 +355,12 @@
         <mesh filename="package://neo_simulation2/components/sensors/SICK-MICROSCAN3.dae" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin rpy="1.57 0 0" xyz="-0.0 0 -0.06"/>
       <geometry>
         <mesh filename="package://neo_simulation2/components/sensors/SICK-MICROSCAN3.dae" scale="0.001 0.001 0.001"/>
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <!--+++++++++++++++++++ IMU ++++++++++++++++++++++++-->
   <!-- Comment or uncomment based on your requirement -->
