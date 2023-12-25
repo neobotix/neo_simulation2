@@ -25,11 +25,11 @@ def generate_launch_description():
         MY_NEO_ENVIRONMENT + ".world",
     )
 
-    if int(MY_NO_ROBOTS) > 5:
-        print("Warn: Having more than 5 robots is not a good idea - too much overhead")
-        print("Therefore Let's spawn 5")
-        MY_NO_ROBOTS = "5"
-        time.sleep(5)
+    # if int(MY_NO_ROBOTS) > 5:
+    #     print("Warn: Having more than 5 robots is not a good idea - too much overhead")
+    #     print("Therefore Let's spawn 5")
+    #     MY_NO_ROBOTS = "5"
+    #     time.sleep(5)
 
     ld = LaunchDescription()
     gazebo = IncludeLaunchDescription(

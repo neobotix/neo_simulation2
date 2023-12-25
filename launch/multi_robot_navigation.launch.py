@@ -19,11 +19,11 @@ MY_NO_ROBOTS = os.environ["Number_of_Robots"]
 
 def generate_launch_description():
     global MY_NO_ROBOTS
-    if int(MY_NO_ROBOTS) > 5:
-        print("Warn: Having more than 5 robots is not a good idea - too much overhead")
-        print("Therefore Let's spawn 5")
-        MY_NO_ROBOTS = "5"
-        time.sleep(5)
+    # if int(MY_NO_ROBOTS) > 5:
+    #     print("Warn: Having more than 5 robots is not a good idea - too much overhead")
+    #     print("Therefore Let's spawn 5")
+    #     MY_NO_ROBOTS = "5"
+    #     time.sleep(5)
 
     ld = LaunchDescription()
     bringup = []
