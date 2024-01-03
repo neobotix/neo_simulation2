@@ -4,7 +4,7 @@
 import launch
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess, AppendEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import ThisLaunchFileDir, LaunchConfiguration
 from launch_ros.actions import Node
@@ -57,12 +57,25 @@ def generate_launch_description():
         name='parameter_bridge',
         output='screen',
         parameters=[{'config_file': bridge_config_file}])
-
-    tf_odom = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        name='parameter_bridge',
+    
+    teleop =  Node(package='teleop_twist_keyboard',executable="teleop_twist_keyboard",
         output='screen',
-        parameters=[{'config_file': bridge_config_file}])
+        prefix = 'xterm -e',
+        name='teleop')
+    
+    # For harmonic and other versions GZ_SIM_RESOURCE_PATH
+    # set_env_vars_resources_world = AppendEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', 
+    #         os.path.join(get_package_share_directory('neo_simulation2'), 
+    #             'models'))
 
-    return LaunchDescription([ignition, spawn_robot, gz_bridge, start_robot_state_publisher_cmd, tf_odom])
+    # set_env_vars_resources_robots = AppendEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', 
+    #         os.path.join(get_package_share_directory('neo_simulation2')))
+
+    return LaunchDescription([
+                            # set_env_vars_resources_world,
+                            # set_env_vars_resources_robots,
+                            ignition,
+                            spawn_robot,
+                            start_robot_state_publisher_cmd,
+                            gz_bridge,
+                            teleop])
