@@ -1,0 +1,69 @@
+ # Set just topic name, applies to both
+# - topic_name: "chatter"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "ignition.msgs.StringMsg"
+
+# Set just ROS topic name, applies to both
+# - ros_topic_name: "cmd_vel"
+#   ros_type_name: "geometry_msgs::msg::Twist"
+#   gz_type_name: "ignition.msgs.StringMsg"
+
+# Set just GZ topic name, applies to both
+# - gz_topic_name: "chatter_ign"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "ignition.msgs.StringMsg"
+
+# Odom
+- ros_topic_name: "/odom"
+  gz_topic_name: "/odom"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "ignition.msgs.OdometryWithCovariance"
+  direction: "GZ_TO_ROS"
+
+#tf
+- ros_topic_name: "/tf"
+  gz_topic_name: "/tf"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "ignition.msgs.Pose_V"
+  direction: "GZ_TO_ROS"
+
+# Scanners
+- ros_topic_name: "/scan"
+  gz_topic_name: "/scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "ignition.msgs.LaserScan"
+  direction: "GZ_TO_ROS"
+
+- ros_topic_name: "/scan2"
+  gz_topic_name: "/scan2"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "ignition.msgs.LaserScan"
+  direction: "GZ_TO_ROS"
+
+# Set each topic name explicitly
+- ros_topic_name: "/cmd_vel"
+  gz_topic_name: "/cmd_vel"
+  ros_type_name: "geometry_msgs/msg/Twist"
+  gz_type_name: "ignition.msgs.Twist"
+  direction: "BIDIRECTIONAL" 
+
+# Full set of configurations
+- ros_topic_name: "/clock"
+  gz_topic_name: "clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  direction: "GZ_TO_ROS"  # Default "BIDIRECTIONAL" - Bridge both directions
+                            # "GZ_TO_ROS" - Bridge Ignition topic to ROS
+                            # "ROS_TO_GZ" - Bridge ROS topic to Ignition
+
+# Full set of configurations
+# - ros_topic_name: "ros_chatter"
+#   gz_topic_name: "ign_chatter"
+#   ros_type_name: "std_msgs/msg/String"
+#   gz_type_name: "ignition.msgs.StringMsg"
+#   subscriber_queue: 5       # Default 10
+#   publisher_queue: 6        # Default 10
+#   lazy: true                # Default "false"
+#   direction: BIDIRECTIONAL  # Default "BIDIRECTIONAL" - Bridge both directions
+#                             # "GZ_TO_ROS" - Bridge Ignition topic to ROS
+#                             # "ROS_TO_GZ" - Bridge ROS topic to Ignition
