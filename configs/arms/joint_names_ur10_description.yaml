@@ -10,12 +10,12 @@ controller_manager:
 arm_controller:
   ros__parameters:
     joints:
-      - shoulder_pan_joint
-      - shoulder_lift_joint
-      - elbow_joint
-      - wrist_1_joint
-      - wrist_2_joint
-      - wrist_3_joint
+      - ur10shoulder_pan_joint
+      - ur10shoulder_lift_joint
+      - ur10elbow_joint
+      - ur10wrist_1_joint
+      - ur10wrist_2_joint
+      - ur10wrist_3_joint
     command_interfaces:
       - position
     state_interfaces:
@@ -28,9 +28,9 @@ arm_controller:
     constraints:
       stopped_velocity_tolerance: 0.2
       goal_time: 1.0
-      shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
-      shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
-      elbow_joint: { trajectory: 0.2, goal: 0.1 }
-      wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
-      wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
-      wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
+      ur10shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
+      ur10shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
+      ur10elbow_joint: { trajectory: 0.2, goal: 0.1 }
+      ur10wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
+      ur10wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
+      ur10wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
