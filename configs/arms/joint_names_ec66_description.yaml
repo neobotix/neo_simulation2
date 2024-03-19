@@ -1,0 +1,36 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 # Hz
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    use_sim_time: true
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 1.0
+      joint1: { trajectory: 0.2, goal: 0.1 }
+      joint2: { trajectory: 0.2, goal: 0.1 }
+      joint3: { trajectory: 0.2, goal: 0.1 }
+      joint4: { trajectory: 0.2, goal: 0.1 }
+      joint5: { trajectory: 0.2, goal: 0.1 }
+      joint6: { trajectory: 0.2, goal: 0.1 }

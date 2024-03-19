@@ -10,6 +10,6 @@ install(DIRECTORY launch
   robots
   components
   models
-  DESTINATION share/${PROJECT_NAME})
+  DESTINATION share/${PROJECT_NAME}/)
 
 ament_package()
