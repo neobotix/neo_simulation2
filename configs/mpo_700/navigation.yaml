@@ -113,65 +113,27 @@ amcl:
 
 bt_navigator:
   ros__parameters:
-    use_sim_time: True
     global_frame: map
     robot_base_frame: base_link
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
-    groot_zmq_publisher_port: 1666
-    groot_zmq_server_port: 1667
-    plugin_lib_names:
-      - nav2_compute_path_to_pose_action_bt_node
-      - nav2_compute_path_through_poses_action_bt_node
-      - nav2_smooth_path_action_bt_node
-      - nav2_follow_path_action_bt_node
-      - nav2_spin_action_bt_node
-      - nav2_wait_action_bt_node
-      - nav2_assisted_teleop_action_bt_node
-      - nav2_back_up_action_bt_node
-      - nav2_drive_on_heading_bt_node
-      - nav2_clear_costmap_service_bt_node
-      - nav2_is_stuck_condition_bt_node
-      - nav2_goal_reached_condition_bt_node
-      - nav2_goal_updated_condition_bt_node
-      - nav2_globally_updated_goal_condition_bt_node
-      - nav2_is_path_valid_condition_bt_node
-      - nav2_are_error_codes_active_condition_bt_node
-      - nav2_would_a_controller_recovery_help_condition_bt_node
-      - nav2_would_a_planner_recovery_help_condition_bt_node
-      - nav2_would_a_smoother_recovery_help_condition_bt_node
-      - nav2_initial_pose_received_condition_bt_node
-      - nav2_reinitialize_global_localization_service_bt_node
-      - nav2_rate_controller_bt_node
-      - nav2_distance_controller_bt_node
-      - nav2_speed_controller_bt_node
-      - nav2_truncate_path_action_bt_node
-      - nav2_truncate_path_local_action_bt_node
-      - nav2_goal_updater_node_bt_node
-      - nav2_recovery_node_bt_node
-      - nav2_pipeline_sequence_bt_node
-      - nav2_round_robin_node_bt_node
-      - nav2_transform_available_condition_bt_node
-      - nav2_time_expired_condition_bt_node
-      - nav2_path_expiring_timer_condition
-      - nav2_distance_traveled_condition_bt_node
-      - nav2_single_trigger_bt_node
-      - nav2_goal_updated_controller_bt_node
-      - nav2_is_battery_low_condition_bt_node
-      - nav2_navigate_through_poses_action_bt_node
-      - nav2_navigate_to_pose_action_bt_node
-      - nav2_remove_passed_goals_action_bt_node
-      - nav2_planner_selector_bt_node
-      - nav2_controller_selector_bt_node
-      - nav2_goal_checker_selector_bt_node
-      - nav2_controller_cancel_bt_node
-      - nav2_path_longer_on_approach_bt_node
-      - nav2_wait_cancel_bt_node
-      - nav2_spin_cancel_bt_node
-      - nav2_back_up_cancel_bt_node
-      - nav2_assisted_teleop_cancel_bt_node
-      - nav2_drive_on_heading_cancel_bt_node
+    wait_for_service_timeout: 1000
+    action_server_result_timeout: 900.0
+    navigators: ["navigate_to_pose", "navigate_through_poses"]
+    navigate_to_pose:
+      plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
+    navigate_through_poses:
+      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
+    # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
+    # nav2_bt_navigator/navigate_to_pose_w_replanning_and_recovery.xml
+    # nav2_bt_navigator/navigate_through_poses_w_replanning_and_recovery.xml
+    # They can be set here or via a RewrittenYaml remap from a parent launch file to Nav2.
+
+    # plugin_lib_names is used to add custom BT plugins to the executor (vector of strings).
+    # Built-in plugins are added automatically
+    # plugin_lib_names: []
+
     error_code_names:
       - compute_path_error_code
       - follow_path_error_code
@@ -347,14 +309,45 @@ map_saver:
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 5.0
-    use_sim_time: True
     planner_plugins: ["GridBased"]
+    use_sim_time: True
+
     GridBased:
-      plugin: "nav2_navfn_planner/NavfnPlanner"
-      tolerance: 0.5
-      use_astar: false
-      allow_unknown: true
+      plugin: "nav2_smac_planner::SmacPlannerHybrid" # In Iron and older versions, "/" was used instead of "::"
+      downsample_costmap: false           # whether or not to downsample the map
+      downsampling_factor: 1              # multiplier for the resolution of the costmap layer (e.g. 2 on a 5cm costmap would be 10cm)
+      tolerance: 0.25                     # dist-to-goal heuristic cost (distance) for valid tolerance endpoints if exact goal cannot be found.
+      allow_unknown: true                 # allow traveling in unknown space
+      max_iterations: 1000000             # maximum total iterations to search for before failing (in case unreachable), set to -1 to disable
+      max_on_approach_iterations: 1000    # Maximum number of iterations after within tolerances to continue to try to find exact solution
+      max_planning_time: 5.0              # max time in s for planner to plan, smooth
+      motion_model_for_search: "DUBIN"    # Hybrid-A* Dubin, Redds-Shepp
+      angle_quantization_bins: 72         # Number of angle bins for search
+      analytic_expansion_ratio: 3.5       # The ratio to attempt analytic expansions during search for final approach.
+      analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting
+      analytic_expansion_max_cost: 200.0  # The maximum single cost for any part of an analytic expansion to contain and be valid, except when necessary on approach to goal
+      analytic_expansion_max_cost_override: false  #  Whether or not to override the maximum cost setting if within critical distance to goal (ie probably required)
+      minimum_turning_radius: 0.2        # minimum turning radius in m of path / vehicle
+      reverse_penalty: 2.0                # Penalty to apply if motion is reversing, must be => 1
+      change_penalty: 0.0                 # Penalty to apply if motion is changing directions (L to R), must be >= 0
+      non_straight_penalty: 1.2           # Penalty to apply if motion is non-straight, must be => 1
+      cost_penalty: 2.0                   # Penalty to apply to higher cost areas when adding into the obstacle map dynamic programming distance expansion heuristic. This drives the robot more towards the center of passages. A value between 1.3 - 3.5 is reasonable.
+      retrospective_penalty: 0.015
+      lookup_table_size: 20.0             # Size of the dubin/reeds-sheep distance window to cache, in meters.
+      cache_obstacle_heuristic: false     # Cache the obstacle map dynamic programming distance expansion heuristic between subsiquent replannings of the same goal location. Dramatically speeds up replanning performance (40x) if costmap is largely static.
+      debug_visualizations: false         # For Hybrid nodes: Whether to publish expansions on the /expansions topic as an array of poses (the orientation has no meaning) and the path's footprints on the /planned_footprints topic. WARNING: heavy to compute and to display, for debug only as it degrades the performance.
+      use_quadratic_cost_penalty: False
+      downsample_obstacle_heuristic: True
+      allow_primitive_interpolation: False
+      smooth_path: True                   # If true, does a simple and quick smoothing post-processing to the path
+
+      smoother:
+        max_iterations: 1000
+        w_smooth: 0.3
+        w_data: 0.2
+        tolerance: 1.0e-10
+        do_refinement: true
+        refinement_num: 2
 
 behavior_server:
   ros__parameters:
@@ -363,11 +356,11 @@ behavior_server:
     cycle_frequency: 10.0
     behavior_plugins: ["spin", "backup", "wait"]
     spin:
-      plugin: "nav2_behaviors/Spin"
+      plugin: "nav2_behaviors::Spin"
     backup:
-      plugin: "nav2_behaviors/BackUp"
+      plugin: "nav2_behaviors::BackUp"
     wait:
-      plugin: "nav2_behaviors/Wait"
+      plugin: "nav2_behaviors::Wait"
     global_frame: odom
     robot_base_frame: base_link
     transform_timeout: 0.1
