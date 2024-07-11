@@ -24,12 +24,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: ros-tooling/setup-ros@0.3.4
+      - uses: ros-tooling/setup-ros@0.7.7
         with:
           use-ros2-testing: false
-      - uses: ros-tooling/action-ros-ci@0.2.6
+      - uses: ros-tooling/action-ros-ci@0.3.13
         with:
-          target-ros2-distro: rolling
+          target-ros2-distro: iron
           colcon-defaults: |
             {
               "build": {
