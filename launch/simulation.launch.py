@@ -21,7 +21,7 @@ You can launch this file using the following terminal commands:
 
 1. `ros2 launch neo_simulation2 simulation.launch.py --show-args`
    This command shows the arguments that can be passed to the launch file.
-2. `ros2 launch neo_simulation2 simulation.launch.py my_robot:=mp_500 map_name:=neo_track1 use_sim_time:=true use_robot_state_pub:=true`
+2. `ros2 launch neo_simulation2 simulation.launch.py my_robot:=mp_500 world:=neo_track1 use_sim_time:=true`
    This command launches the simulation with sample values for the arguments.
 """
 
@@ -35,19 +35,32 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg):
   use_sim_time = True
 
   # Get the required paths for the world and robot robot_description_urdf
-  default_world_path = os.path.join(get_package_share_directory('neo_simulation2'), 'worlds', my_neo_environment + '.world')
-  robot_description_urdf = os.path.join(get_package_share_directory('neo_simulation2'), 'robots/'+my_neo_robot+'/', my_neo_robot+'.urdf')
+  if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1"):
+    world_path = os.path.join(
+      get_package_share_directory('neo_simulation2'),
+      'worlds',
+      my_neo_environment + '.world')
+  else:
+    world_path = my_neo_environment
 
+  # Getting the robot description
+  robot_description_urdf = os.path.join(
+    get_package_share_directory('neo_simulation2'),
+    'robots/'+my_neo_robot+'/',
+    my_neo_robot+'.urdf')
+
+  # Setting the world and starting the Gazebo
   gazebo = IncludeLaunchDescription(
     PythonLaunchDescriptionSource(
       os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
     ),
     launch_arguments={
-        'world': default_world_path,
+        'world': world_path,
         'verbose': 'true',
     }.items()
   )
 
+  # Spawning the robot
   spawn_entity = Node(
     package='gazebo_ros', 
     executable='spawn_entity.py',
@@ -68,6 +81,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg):
   # Append the node to the launch_actions only if use_robot_state_pub is true
   launch_actions.append(start_robot_state_publisher_cmd)
   
+  # Starting the teleop node
   teleop = Node(
     package='teleop_twist_keyboard',
     executable="teleop_twist_keyboard",
@@ -86,25 +100,25 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg):
 def generate_launch_description():
   ld = LaunchDescription()
 
-  # Declare launch arguments 'my_robot' and 'map_name' with default values and descriptions
+  # Declare launch arguments 'my_robot' and 'world' with default values and descriptions
   declare_my_robot_arg = DeclareLaunchArgument(
     'my_robot', 
     default_value='mpo_700',
     description='Robot Types: "mpo_700", "mpo_500", "mp_400", "mp_500"'
   ) 
   
-  declare_map_name_arg = DeclareLaunchArgument(
-    'map_name',
+  declare_world_name_arg = DeclareLaunchArgument(
+    'world',
     default_value='neo_workshop',
-    description='Map Types: "neo_track1", "neo_workshop"'
+    description='Available worlds: "neo_track1", "neo_workshop"'
   )
   
   # Create launch configuration variables for the robot and map name
   my_neo_robot_arg = LaunchConfiguration('my_robot')
-  my_neo_env_arg = LaunchConfiguration('map_name')
+  my_neo_env_arg = LaunchConfiguration('world')
 
   ld.add_action(declare_my_robot_arg)
-  ld.add_action(declare_map_name_arg)
+  ld.add_action(declare_world_name_arg)
 
   context_arguments = [my_neo_robot_arg, my_neo_env_arg]
 

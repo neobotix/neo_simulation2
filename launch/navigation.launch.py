@@ -55,6 +55,7 @@ def launch_setup(context: LaunchContext,
   nav2_launch_file_dir = os.path.join(get_package_share_directory('neo_nav2_bringup'), 'launch')
 
   # Define the IncludeLaunchDescription objects
+  # neo_localization
   localization_neo_launch_description = IncludeLaunchDescription(
     PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_neo.launch.py']),
     condition=IfCondition(PythonExpression(['not ', use_amcl])),
@@ -66,6 +67,7 @@ def launch_setup(context: LaunchContext,
         'namespace': namespace}.items(),
   )
 
+  # amcl_localization
   localization_amcl_launch_description = IncludeLaunchDescription(
     PythonLaunchDescriptionSource([nav2_launch_file_dir, '/localization_amcl.launch.py']),
     condition=IfCondition(use_amcl),
@@ -77,6 +79,7 @@ def launch_setup(context: LaunchContext,
         'namespace': namespace}.items(),
   )
 
+  # starting the navigation
   navigation_neo_launch_description = IncludeLaunchDescription(
     PythonLaunchDescriptionSource([nav2_launch_file_dir, '/navigation_neo.launch.py']),
     launch_arguments={
