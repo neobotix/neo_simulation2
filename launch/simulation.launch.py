@@ -4,10 +4,12 @@
 import launch
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription, LaunchContext
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
+                            OpaqueFunction, RegisterEventHandler)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch.event_handlers import OnShutdown
 import os
 
 """
@@ -27,106 +29,133 @@ You can launch this file using the following terminal commands:
 
 # OpaqueFunction is used to perform setup actions during launch through a Python function
 def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg):
-  # Create a list to hold all the nodes
-  launch_actions = []
-  # The perform method of a LaunchConfiguration is called to evaluate its value.
-  my_neo_robot = my_neo_robot_arg.perform(context)
-  my_neo_environment = my_neo_env_arg.perform(context)
-  use_sim_time = True
+    # Create a list to hold all the nodes
+    launch_actions = []
+    # The perform method of a LaunchConfiguration is called to evaluate its value.
+    my_neo_robot = my_neo_robot_arg.perform(context)
+    my_neo_environment = my_neo_env_arg.perform(context)
+    use_sim_time = True
 
-  # Get the required paths for the world and robot robot_description_urdf
-  if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1"):
-    world_path = os.path.join(
-      get_package_share_directory('neo_simulation2'),
-      'worlds',
-      my_neo_environment + '.world')
-  else:
-    world_path = my_neo_environment
+    robots = ["mpo_700", "mp_400", "mp_500", "mpo_500"]
 
-  # Getting the robot description
-  robot_description_urdf = os.path.join(
-    get_package_share_directory('neo_simulation2'),
-    'robots/'+my_neo_robot+'/',
-    my_neo_robot+'.urdf')
+    # Checking if the user has selected a robot that is valid
+    valid = False
+    for robot in robots:
+        if (my_neo_robot == robot):
+            valid = True
 
-  # Setting the world and starting the Gazebo
-  gazebo = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource(
-      os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
-    ),
-    launch_arguments={
-        'world': world_path,
-        'verbose': 'true',
-    }.items()
-  )
+    if (valid == False):
+        # Incase of an invalid selection
+        print("Invalid option, setting mpo_700 by default")
+        my_neo_robot = "mpo_700"
+    
+    with open('robot_name.txt', 'w') as file:
+        file.write(my_neo_robot)
+    
+    # Get the required paths for the world and robot robot_description_urdf
+    if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1"):
+        world_path = os.path.join(
+            get_package_share_directory('neo_simulation2'),
+            'worlds',
+            my_neo_environment + '.world')
+    else:
+        world_path = my_neo_environment
 
-  # Spawning the robot
-  spawn_entity = Node(
-    package='gazebo_ros', 
-    executable='spawn_entity.py',
-    arguments=['-entity', my_neo_robot,'-file', robot_description_urdf], 
-    output='screen'
-  )
+    # Getting the robot description
+    robot_description_urdf = os.path.join(
+        get_package_share_directory('neo_simulation2'),
+        'robots/'+my_neo_robot+'/',
+        my_neo_robot+'.urdf')
 
-  # Start the robot state publisher node
-  start_robot_state_publisher_cmd = Node(
-    package='robot_state_publisher',
-    executable='robot_state_publisher',
-    name='robot_state_publisher',
-    output='screen',
-    parameters=[{'use_sim_time': use_sim_time}],
-    arguments=[robot_description_urdf]
-  )
+    # Setting the world and starting the Gazebo
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
+        ),
+        launch_arguments={
+            'world': world_path,
+            'verbose': 'true',
+        }.items()
+    )
 
-  # Append the node to the launch_actions only if use_robot_state_pub is true
-  launch_actions.append(start_robot_state_publisher_cmd)
-  
-  # Starting the teleop node
-  teleop = Node(
-    package='teleop_twist_keyboard',
-    executable="teleop_twist_keyboard",
-    output='screen',
-    prefix = 'xterm -e',
-    name='teleop'
-  )
+    # Spawning the robot
+    spawn_entity = Node(
+        package='gazebo_ros', 
+        executable='spawn_entity.py',
+        arguments=['-entity', my_neo_robot,'-file', robot_description_urdf], 
+        output='screen'
+    )
 
-  # The required nodes can just be appended to the launch_actions list
-  launch_actions.append(gazebo)
-  launch_actions.append(spawn_entity)
-  launch_actions.append(teleop)
+    # Start the robot state publisher node
+    start_robot_state_publisher_cmd = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
+        arguments=[robot_description_urdf]
+    )
 
-  return launch_actions
+    # Append the node to the launch_actions only if use_robot_state_pub is true
+    launch_actions.append(start_robot_state_publisher_cmd)
+
+    # Starting the teleop node
+    teleop = Node(
+        package='teleop_twist_keyboard',
+        executable="teleop_twist_keyboard",
+        output='screen',
+        prefix = 'xterm -e',
+        name='teleop'
+    )
+
+    # See Issue: https://github.com/ros2/rclpy/issues/1287
+    # Cannot delete the newly create file. The user has to delete it on his own
+    # Refer documentation for more info
+    # shutdown_event = RegisterEventHandler(
+    #         OnShutdown(
+    #             on_shutdown=[os.remove('robot_name.txt')]
+    #         )
+    #     )
+
+    # The required nodes can just be appended to the launch_actions list
+    launch_actions.append(gazebo)
+    launch_actions.append(spawn_entity)
+    launch_actions.append(teleop)
+
+    # launch_actions.append(shutdown_event)
+
+    return launch_actions
 
 def generate_launch_description():
-  ld = LaunchDescription()
+    ld = LaunchDescription()
 
-  # Declare launch arguments 'my_robot' and 'world' with default values and descriptions
-  declare_my_robot_arg = DeclareLaunchArgument(
-    'my_robot', 
-    default_value='mpo_700',
-    description='Robot Types: "mpo_700", "mpo_500", "mp_400", "mp_500"'
-  ) 
-  
-  declare_world_name_arg = DeclareLaunchArgument(
-    'world',
-    default_value='neo_workshop',
-    description='Available worlds: "neo_track1", "neo_workshop"'
-  )
-  
-  # Create launch configuration variables for the robot and map name
-  my_neo_robot_arg = LaunchConfiguration('my_robot')
-  my_neo_env_arg = LaunchConfiguration('world')
+    # Declare launch arguments 'my_robot' and 'world' with default values and descriptions
+    declare_my_robot_arg = DeclareLaunchArgument(
+        'my_robot', 
+        default_value='mpo_700',
+        description='Robot Types: "mpo_700", "mpo_500", "mp_400", "mp_500"'
+    ) 
+    
+    declare_world_name_arg = DeclareLaunchArgument(
+        'world',
+        default_value='neo_workshop',
+        description='Available worlds: "neo_track1", "neo_workshop"'
+    )
+    
+    # Create launch configuration variables for the robot and map name
+    my_neo_robot_arg = LaunchConfiguration('my_robot')
+    my_neo_env_arg = LaunchConfiguration('world')
 
-  ld.add_action(declare_my_robot_arg)
-  ld.add_action(declare_world_name_arg)
+    ld.add_action(declare_my_robot_arg)
+    ld.add_action(declare_world_name_arg)
 
-  context_arguments = [my_neo_robot_arg, my_neo_env_arg]
+    context_arguments = [my_neo_robot_arg, my_neo_env_arg]
 
-  opq_function = OpaqueFunction(
-      function=launch_setup, 
-      args=context_arguments
-  )
+    opq_function = OpaqueFunction(
+        function=launch_setup, 
+        args=context_arguments
+    )
 
-  ld.add_action(opq_function)
+    ld.add_action(opq_function)
 
-  return ld
+    return ld
