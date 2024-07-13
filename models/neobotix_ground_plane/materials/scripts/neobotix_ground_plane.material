@@ -10,7 +10,7 @@ material NeobotixGroundPlane/Image
 
           texture_unit
           {
-            texture MyImage.jpg
+            texture MyImage.png
           }
         }
       }
