@@ -8,6 +8,7 @@ install(DIRECTORY launch
   maps
   worlds
   robots
+  rviz
   components
   models
   DESTINATION share/${PROJECT_NAME})

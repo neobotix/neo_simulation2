@@ -4,6 +4,9 @@
 
     <!--set use_gazebo = false for implementation on real robot-->
     <xacro:arg name="use_gazebo" default="true"/>
+    
+    <!--set use_docking_adapter = true to use adapter with the robot-->
+    <xacro:arg name="use_docking_adapter" default="false"/>
 
     <!--set arm name to include the arm in the simulation-->
     <xacro:arg name="arm_type" default=""/>

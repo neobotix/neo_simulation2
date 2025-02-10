@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- This is the URDF file for Robotiq 2f 140 Gripper-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robotiq_gripper">
+            
+            <!-- ur_adapter for gripper-->
+            <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro"/>
+            <xacro:ur_to_robotiq 
+                prefix="" 
+                parent="$(arg tf_prefix)tool0" 
+                child="neo_gripper_mount_link"
+                rotation="${pi/2}"
+                />
+
+            <!-- add gripper-->
+            <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_140_macro.urdf.xacro"/>
+            <xacro:robotiq_gripper name="robotiq_gripper" prefix="" parent="neo_gripper_mount_link" include_ros2_control="true" sim_ignition="true">
+                <origin xyz="0 0 0" rpy="0 0 -${pi / 2}"/>
+            </xacro:robotiq_gripper>
+
+</robot>
+

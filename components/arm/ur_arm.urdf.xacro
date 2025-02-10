@@ -57,5 +57,8 @@
                 </gazebo>
             </xacro:if>
 
+            <!-- include robotiq gripper-->
+            <xacro:include filename="$(find neo_simulation2)/components/arm/robotiq_gripper.urdf.xacro"/>
+
 </robot>
 

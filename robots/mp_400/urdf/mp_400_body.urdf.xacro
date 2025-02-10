@@ -3,15 +3,6 @@
 
     <link name="base_footprint"/>
 
-    <joint name="base_footprint_joint" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <axis xyz="0 0 -1"/>
-        <!-- <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="3.5"/> -->
-        <joint_properties damping="1" friction="1"/>
-        <parent link="base_footprint"/>
-        <child link="base_link"/>
-    </joint>
-
     <link name="base_link">
         <inertial>
             <mass value="30"/>
@@ -31,6 +22,15 @@
             </geometry>
         </collision>
     </link>
+
+    <joint name="base_footprint_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <axis xyz="0 0 -1"/>
+        <!-- <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="3.5"/> -->
+        <joint_properties damping="1" friction="1"/>
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
+    </joint>
 
     <!-- Sensors -->
     <joint name="lidar_1_joint" type="fixed">

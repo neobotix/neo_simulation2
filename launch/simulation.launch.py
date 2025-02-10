@@ -34,13 +34,14 @@ You can launch this file using the following terminal commands:
 """
 
 # OpaqueFunction is used to perform setup actions during launch through a Python function
-def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot_arm_arg):
+def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot_arm_arg, docking_adapter_arg):
     # Create a list to hold all the nodes
     launch_actions = []
     # The perform method of a LaunchConfiguration is called to evaluate its value.
     my_neo_robot = my_neo_robot_arg.perform(context)
     my_neo_environment = my_neo_env_arg.perform(context)
     robot_arm_type = robot_arm_arg.perform(context)
+    use_docking_adapter = docking_adapter_arg.perform(context)
     use_sim_time = True
 
     robots = ["mpo_700", "mp_400", "mp_500", "mpo_500"]
@@ -86,17 +87,16 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         'robots/'+my_neo_robot+'/',
         my_neo_robot+'.urdf.xacro')
     
-    # mpo robots have the option to mount arms
-    if (my_neo_robot == "mpo_700" or my_neo_robot == "mpo_500"):
-        # use_gazebo is set to True since this code launches the robot in simulation
-        xacro_args = {
-            'use_gazebo': 'true',
-            'arm_type': robot_arm_type, 
-        }
-    else:
-        xacro_args = {
-            'use_gazebo': 'true',
-        }
+    # Docking adapter is only for MPO 700
+    if (my_neo_robot != "mpo_700"):
+        use_docking_adapter = False
+        
+     # use_gazebo is set to True since this code launches the robot in simulation
+    xacro_args = {
+        'use_gazebo': 'true',
+        'arm_type': robot_arm_type,
+        'use_docking_adapter': use_docking_adapter
+    }
 
     # Use xacro to process the file with the argunments above
     robot_description_file = xacro.process_file(
@@ -188,16 +188,24 @@ def generate_launch_description():
         '\t Universal Robotics: ur5, ur10, ur5e, ur10e'        
     )
 
+    declare_docking_adapter_cmd = DeclareLaunchArgument(
+        'use_docking_adapter', default_value='False',
+        description='Set True to use the docking adapter for the robot\n'
+        '\t Neobotix: docking_adapter'
+    )
+
     # Create launch configuration variables for the robot and map name
     my_neo_robot_arg = LaunchConfiguration('my_robot')
     my_neo_env_arg = LaunchConfiguration('world')
     robot_arm_arg = LaunchConfiguration('arm_type')
+    docking_adapter_arg = LaunchConfiguration('use_docking_adapter')
 
     ld.add_action(declare_my_robot_arg)
     ld.add_action(declare_world_name_arg)
     ld.add_action(declare_arm_type_cmd)
+    ld.add_action(declare_docking_adapter_cmd)
 
-    context_arguments = [my_neo_robot_arg, my_neo_env_arg, robot_arm_arg]
+    context_arguments = [my_neo_robot_arg, my_neo_env_arg, robot_arm_arg, docking_adapter_arg]
 
     opq_function = OpaqueFunction(
         function=launch_setup, 

@@ -28,8 +28,8 @@
                 <publish_odom_tf>true</publish_odom_tf>
     
                 <!-- Frame IDs -->
-                <odometryFrame>${odom_frame}</odometryFrame>
-                <robotBaseFrame>${base_frame}</robotBaseFrame>
+                <odometry_frame>${odom_frame}</odometry_frame>
+                <robot_base_frame>${base_frame}</robot_base_frame>
     
                 <!-- Set odom covariance -->
                 <covariance_x>0.0001</covariance_x>

@@ -19,7 +19,7 @@
         command_topic="cmd_vel"
         odometry_topic="odom"
         odom_frame="odom"
-        base_frame="base_footprint"
+        base_frame="base_link"
         max_wheel_torque="200"
         max_acceleration="1.0"
     />
