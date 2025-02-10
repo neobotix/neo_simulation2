@@ -3,6 +3,15 @@
 
     <link name="base_footprint"/>
 
+    <joint name="base_footprint_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <axis xyz="0 0 -1"/>
+        <!-- <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="15"/> -->
+        <joint_properties damping="1" friction="1"/>
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+    </joint>
+
     <link name="base_link">
         <inertial>
             <mass value="140"/>
@@ -22,15 +31,6 @@
             </geometry>
         </collision>
     </link>
-
-    <joint name="base_footprint_joint" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <axis xyz="0 0 -1"/>
-        <!-- <limit effort="1000.0" lower="-1e+16" upper="1e+16" velocity="15"/> -->
-        <joint_properties damping="1" friction="1"/>
-        <parent link="base_link"/>
-        <child link="base_footprint"/>
-    </joint>
 
     <!-- Sensors -->
     <joint name="lidar_1_joint" type="fixed">
@@ -139,7 +139,7 @@
         >
         <origin rpy="0 0 0" xyz="-0.24 -0.18 0.22"/>
     </xacro:mpo_700_caster_wheel>
-
+    
     <!-- NOTE: All wheels have limits-->
     <xacro:mpo_700_wheel 
         wheel_prefix="mpo_700_wheel_front_left"
@@ -186,11 +186,10 @@
     </xacro:mpo_700_wheel>
 
     <!-- Import docking adapter -->
-    <xacro:if value="$(arg use_docking_adapter)">
-        <xacro:include filename="$(find neo_simulation2)/robots/mpo_700/urdf/macro/docking_adapter.xacro"/>
-        <xacro:docking_adapter name="docking_adapter" parent="base_link">
-            <origin xyz="-0.300 0 0.320" rpy="0 0 -1.57" />
-        </xacro:docking_adapter>
-    </xacro:if>
+    <xacro:include filename="$(find neo_simulation2)/robots/mpo_700/urdf/macro/docking_adapter.xacro"/>
+
+    <xacro:docking_adapter name="docking_adapter" parent="base_link">
+        <origin xyz="-0.300 0 0.320" rpy="0 0 -1.57" />
+    </xacro:docking_adapter>
 
 </robot>

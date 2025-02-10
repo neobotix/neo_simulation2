@@ -13,12 +13,11 @@
   <exec_depend>slam_toolbox</exec_depend>
   <exec_depend>neo_nav2_bringup</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>ur_simulation_gazebo</exec_depend>
   <exec_depend>ur_description</exec_depend>
-  <exec_depend>controller_manager</exec_depend>
-  <exec_depend>gazebo_ros2_control</exec_depend>
-  <exec_depend>ros2_control</exec_depend>
-  <exec_depend>ros2_controllers</exec_depend>
-  <exec_depend>robotiq_description</exec_depend>
+  <exec_depend>neo_ur_moveit_config</exec_depend>
+  <exec_depend>elite_description</exec_depend>
+  <exec_depend>elite_gazebo</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
